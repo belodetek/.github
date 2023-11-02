@@ -49,7 +49,7 @@ jobs:
               "params": [
                 "GitHubRestriction=repo:belodetek/cfn-generic-custom-resource:*,repo:belodetek/.github:*",
                 "RoleMaxSessionDuration=43200",
-                "ManagedPolicyArns=arn:aws:iam::aws:policy/AWSCloudFormationFullAccess,arn:aws:iam::aws:policy/AmazonS3FullAccess,arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser,arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser"
+                "ManagedPolicyArns=arn:aws:iam::aws:policy/AWSCloudFormationFullAccess,arn:aws:iam::aws:policy/AmazonS3FullAccess,arn:aws:iam::aws:policy/IAMReadOnlyAccess,arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser,arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser"
               ],
               "tags": [
                 "Name=github-oidc",
