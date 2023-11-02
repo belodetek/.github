@@ -1,4 +1,15 @@
 - commits:
+    - subject: add repo type
+      hash: 297ef792d08e0cb317e0af194b6fd82cadcee90a
+      body: ""
+      footer:
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.4
+  title: ""
+  date: 2023-11-02T18:44:18.120Z
+- commits:
     - subject: IAM read-only access
       hash: c530791315b8ebed4040dc37b284dfa9d39c96b5
       body: ""
