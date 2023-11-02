@@ -1,4 +1,15 @@
 - commits:
+    - subject: IAM full access
+      hash: 06b3c4d52a68fb63af005de27abbd6d68c4cbef6
+      body: ""
+      footer:
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 0.0.6
+  title: ""
+  date: 2023-11-02T19:20:27.222Z
+- commits:
     - subject: add README.md
       hash: 3fa623c5183b7726be99fdd7eb9e136638f3ba7a
       body: ""
