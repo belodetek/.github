@@ -1,4 +1,14 @@
 - commits:
+    - subject: IAM read-only access
+      hash: c530791315b8ebed4040dc37b284dfa9d39c96b5
+      body: ""
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+  version: 0.0.3
+  title: ""
+  date: 2023-11-02T18:28:07.002Z
+- commits:
     - subject: codify GitHub OIDC
       hash: dcfaef44c2857013998fdd5d6a7b8c4bd2ec19f7
       body: ""
