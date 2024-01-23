@@ -18,6 +18,7 @@ jobs:
           project_id: savvy-container-267322
           workload_identity_provider: projects/47855944311/locations/global/workloadIdentityPools/github/providers/oidc
           create_credentials_file: 'true'
+          service_account: my-service-account@savvy-container-267322.iam.gserviceaccount.com
 
       - uses: google-github-actions/setup-gcloud@v2
 
@@ -34,7 +35,8 @@ jobs:
 
           gcloud auth list
 
-          #gcloud services list
-          
+          gcloud services list || true
+
           curl https://admin.googleapis.com/admin/directory/v1/users \
             --header "Authorization: Bearer $(gcloud auth print-access-token)"
+
