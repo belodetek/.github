@@ -30,11 +30,6 @@ jobs:
           echo 'access_token: ${{ steps.auth.outputs.access_token }}'
           echo 'id_token: ${{ steps.auth.outputs.id_token }}'
 
-          gcloud secrets add-iam-policy-binding "my-secret" \
-            --project="${PROJECT_ID}" \
-            --role="roles/secretmanager.secretAccessor" \
-            --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}
-
           gcloud info
 
           gcloud auth list
