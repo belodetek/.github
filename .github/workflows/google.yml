@@ -24,6 +24,5 @@ jobs:
           echo 'credentials_file_path: ${{ steps.auth.outputs.credentials_file_path }}'
           echo 'auth_token: ${{ steps.auth.outputs.auth_token }}'
 
-          gcloud auth login --brief --cred-file='${{ steps.auth.outputs.credentials_file_path }}'
           gcloud auth list
           gcloud services list
