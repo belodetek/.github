@@ -19,10 +19,17 @@ jobs:
           workload_identity_provider: projects/47855944311/locations/global/workloadIdentityPools/github/providers/oidc
           create_credentials_file: 'true'
 
+      - uses: google-github-actions/setup-gcloud@v2
+        with:
+          version: '>= 461.0.0'
+
       - run: |
           echo 'project_id: ${{ steps.auth.outputs.project_id }}'
           echo 'credentials_file_path: ${{ steps.auth.outputs.credentials_file_path }}'
           echo 'auth_token: ${{ steps.auth.outputs.auth_token }}'
 
+          gcloud info
+
           gcloud auth list
+
           gcloud services list
