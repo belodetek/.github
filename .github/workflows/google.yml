@@ -1,0 +1,30 @@
+name: Google Cloud access
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  google-admin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        id: auth
+        with:
+          project_id: savvy-container-267322
+          workload_identity_provider: projects/47855944311/locations/global/workloadIdentityPools/github/providers/oidc
+          create_credentials_file: 'true'
+
+      - run: |
+          echo 'project_id: ${{ steps.auth.outputs.project_id }}'
+          echo 'credentials_file_path: ${{ steps.auth.outputs.credentials_file_path }}'
+          echo 'auth_token: ${{ steps.auth.outputs.auth_token }}'
+          echo 'access_token: ${{ steps.auth.outputs.access_token }}'
+          echo 'id_token: ${{ steps.auth.outputs.id_token }}'
