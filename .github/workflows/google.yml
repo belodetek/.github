@@ -22,12 +22,28 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v2
 
       - run: |
+          set -x
+
           echo 'project_id: ${{ steps.auth.outputs.project_id }}'
           echo 'credentials_file_path: ${{ steps.auth.outputs.credentials_file_path }}'
           echo 'auth_token: ${{ steps.auth.outputs.auth_token }}'
+          echo 'access_token: ${{ steps.auth.outputs.access_token }}'
+          echo 'id_token: ${{ steps.auth.outputs.id_token }}'
+
+          gcloud secrets add-iam-policy-binding "my-secret" \
+            --project="${PROJECT_ID}" \
+            --role="roles/secretmanager.secretAccessor" \
+            --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}
 
           gcloud info
 
           gcloud auth list
 
-          gcloud services list
+          gcloud auth print-access-token
+
+          gcloud auth print-identity-token
+
+          #gcloud services list
+          
+          #curl https://admin.googleapis.com/admin/directory/v1/users \
+          #  --header "Authorization: Bearer ${{ steps.auth.outputs.access_token }}"
