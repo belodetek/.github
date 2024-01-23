@@ -20,8 +20,6 @@ jobs:
           create_credentials_file: 'true'
 
       - uses: google-github-actions/setup-gcloud@v2
-        with:
-          version: '>= 461.0.0'
 
       - run: |
           echo 'project_id: ${{ steps.auth.outputs.project_id }}'
