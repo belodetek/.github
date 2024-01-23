@@ -36,9 +36,7 @@ jobs:
 
           gcloud auth print-access-token
 
-          gcloud auth print-identity-token
-
           #gcloud services list
           
-          #curl https://admin.googleapis.com/admin/directory/v1/users \
-          #  --header "Authorization: Bearer ${{ steps.auth.outputs.access_token }}"
+          curl https://admin.googleapis.com/admin/directory/v1/users \
+            --header "Authorization: Bearer $(gcloud auth print-access-token)"
