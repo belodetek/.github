@@ -17,6 +17,7 @@ jobs:
         with:
           project_id: savvy-container-267322
           workload_identity_provider: projects/47855944311/locations/global/workloadIdentityPools/github/providers/oidc
+          token_format: access_token
           create_credentials_file: 'true'
           service_account: my-service-account@savvy-container-267322.iam.gserviceaccount.com
 
@@ -32,11 +33,7 @@ jobs:
           echo 'id_token: ${{ steps.auth.outputs.id_token }}'
 
           gcloud info
-
           gcloud auth list
 
-          gcloud services list || true
-
           curl https://admin.googleapis.com/admin/directory/v1/users \
-            --header "Authorization: Bearer $(gcloud auth print-access-token)"
-
+            --header 'Authorization: Bearer ${{ steps.auth.outputs.access_token }}'
