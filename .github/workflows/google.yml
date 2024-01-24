@@ -32,17 +32,16 @@ jobs:
       # (Google Cloud) https://console.cloud.google.com/
       # .. enable APIs: Admin SDK API, IAM Service Account Credentials API
       - run: |
-          set -x
-
           gcloud auth list
 
           # https://developers.google.com/admin-sdk
-          urls='https://admin.googleapis.com/admin/directory/v1/users?customer=${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/customers/${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/groups?customer=${{ env.CUSTOMER }}'
+          urls='https://admin.googleapis.com/admin/directory/v1/users?customer=${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/customers/${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/groups?customer=${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/customer/${{ env.CUSTOMER }}/schemas'
 
-          scopes='https://www.googleapis.com/auth/admin.directory.user.readonly,https://www.googleapis.com/auth/admin.directory.group.readonly,https://www.googleapis.com/auth/admin.directory.customer.readonly'
+          scopes='https://www.googleapis.com/auth/admin.directory.customer.readonly,https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly,https://www.googleapis.com/auth/admin.directory.device.mobile.readonly,https://www.googleapis.com/auth/admin.directory.domain.readonly,https://www.googleapis.com/auth/admin.directory.group.member.readonly,https://www.googleapis.com/auth/admin.directory.orgunit.readonly,https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly,https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly,https://www.googleapis.com/auth/admin.directory.user.alias.readonly,https://www.googleapis.com/auth/admin.directory.user.readonly,https://www.googleapis.com/auth/admin.directory.userschema.readonly'
 
           token="$(gcloud auth print-access-token --scopes=${scopes})"
-          
+          echo "::add-mask::${token}"
+
           curl --fail https://www.googleapis.com/oauth2/v1/tokeninfo \
             --header 'Content-Type: application/x-www-form-urlencoded' \
             --header 'X-Goog-User-Project: ${{ steps.auth.outputs.project_id }}' \
