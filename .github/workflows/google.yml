@@ -7,8 +7,8 @@ permissions:
   contents: read
 
 env:
-  SA: my-service-account@savvy-container-267322.iam.gserviceaccount.com
-  CUSTOMER: C01jv3tsi
+  SA: ${{ vars.SA }}
+  CUSTOMER: ${{ vars.CUSTOMER }}
 
 jobs:
   google-admin:
