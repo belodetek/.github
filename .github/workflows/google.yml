@@ -33,18 +33,18 @@ jobs:
           gcloud auth list
 
           # https://developers.google.com/admin-sdk/directory/reference/rest/v1/users
-          curl --fail --silent \
+          curl -i --fail --silent \
             https://admin.googleapis.com/admin/directory/v1/users?customer=${CUSTOMER} \
             --header "Authorization: Bearer $(gcloud auth print-access-token)" \
             | jq -r '.users[].id'
 
           # https://developers.google.com/admin-sdk/directory/reference/rest/v1/roleAssignments/list
-          curl --fail --silent \
+          curl -i --fail --silent \
             https://admin.googleapis.com/admin/directory/v1/customer/${CUSTOMER}/roleassignments \
             --header "Authorization: Bearer $(gcloud auth print-access-token)" | jq -r .
 
           # https://developers.google.com/admin-sdk/directory/reference/rest/v1/roles/list
-          curl --fail --silent \
+          curl -i --fail --silent \
             https://admin.googleapis.com/admin/directory/v1/customer/${CUSTOMER}/roles \
             --header "Authorization: Bearer $(gcloud auth print-access-token)" | jq -r .
 
