@@ -30,6 +30,8 @@ jobs:
       - run: |
           set -x
 
+          gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+
           gcloud auth list
 
           # https://developers.google.com/admin-sdk
