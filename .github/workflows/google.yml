@@ -37,12 +37,12 @@ jobs:
 
           scopes='https://www.googleapis.com/auth/admin.directory.user.readonly,https://www.googleapis.com/auth/admin.directory.group.readonly,https://www.googleapis.com/auth/admin.directory.customer.readonly'
 
-          token=$(gcloud auth print-access-token \
+          token="$(gcloud auth print-access-token \
             --impersonate-service-account ${SA} \
             --scopes=${scopes})"
           
           curl --fail https://www.googleapis.com/oauth2/v1/tokeninfo \
-            --header "Content-Type: application/x-www-form-urlencoded" \
+            --header 'Content-Type: application/x-www-form-urlencoded' \
             --header 'X-Goog-User-Project: ${{ steps.auth.outputs.project_id }}'
             --data "access_token=${token}" | jq -r .
 
