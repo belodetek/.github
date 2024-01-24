@@ -17,7 +17,7 @@ jobs:
         id: auth
         with:
           project_id: ${{ vars.PROJECT_ID }}
-          workload_identity_provider: $${{ vars.WORKLOAD_ID_PROVIDER }}
+          workload_identity_provider: ${{ vars.WORKLOAD_ID_PROVIDER }}
           service_account: ${{ vars.SA }}
 
       # https://github.com/google-github-actions/setup-gcloud
