@@ -41,12 +41,12 @@ jobs:
           # https://developers.google.com/admin-sdk/directory/reference/rest/v1/roleAssignments/list
           curl -i --fail --silent \
             https://admin.googleapis.com/admin/directory/v1/customer/${CUSTOMER}/roleassignments \
-            --header "Authorization: Bearer $(gcloud auth print-access-token)"
+            --header "Authorization: Bearer $(gcloud auth application-default print-access-token)"
 
           # https://developers.google.com/admin-sdk/directory/reference/rest/v1/roles/list
           curl -i --fail --silent \
             https://admin.googleapis.com/admin/directory/v1/customer/${CUSTOMER}/roles \
-            --header "Authorization: Bearer $(gcloud auth print-access-token)"
+            --header "Authorization: Bearer $(gcloud auth application-default print-access-token)"
 
         env:
           CUSTOMER: C01jv3tsi
