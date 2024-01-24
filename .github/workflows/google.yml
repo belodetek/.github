@@ -6,6 +6,10 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  SA: my-service-account@savvy-container-267322.iam.gserviceaccount.com
+  CUSTOMER: C01jv3tsi
+
 jobs:
   google-admin:
     runs-on: ubuntu-latest
@@ -18,7 +22,7 @@ jobs:
         with:
           project_id: savvy-container-267322
           workload_identity_provider: projects/47855944311/locations/global/workloadIdentityPools/github/providers/oidc
-          service_account: my-service-account@savvy-container-267322.iam.gserviceaccount.com
+          service_account: ${{ env.SA }}
 
       # https://github.com/google-github-actions/setup-gcloud
       - uses: google-github-actions/setup-gcloud@v2
@@ -30,17 +34,15 @@ jobs:
       - run: |
           set -x
 
-          gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
-
           gcloud auth list
 
           # https://developers.google.com/admin-sdk
-          urls="https://admin.googleapis.com/admin/directory/v1/users?customer=${CUSTOMER} https://admin.googleapis.com/admin/directory/v1/customers/${CUSTOMER} https://admin.googleapis.com/admin/directory/v1/groups?customer=${CUSTOMER}"
+          urls='https://admin.googleapis.com/admin/directory/v1/users?customer=${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/customers/${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/groups?customer=${{ env.CUSTOMER }}'
 
           scopes='https://www.googleapis.com/auth/admin.directory.user.readonly,https://www.googleapis.com/auth/admin.directory.group.readonly,https://www.googleapis.com/auth/admin.directory.customer.readonly'
 
           token="$(gcloud auth print-access-token \
-            --impersonate-service-account ${SA} \
+            --impersonate-service-account ${{ env.SA }} \
             --scopes=${scopes})"
           
           curl --fail https://www.googleapis.com/oauth2/v1/tokeninfo \
@@ -53,7 +55,3 @@ jobs:
                 --header "Authorization: Bearer ${token}" \
                 --header 'X-Goog-User-Project: ${{ steps.auth.outputs.project_id }}' | jq -r .
           done
-
-        env:
-          CUSTOMER: C01jv3tsi
-          SA: my-service-account@savvy-container-267322.iam.gserviceaccount.com
