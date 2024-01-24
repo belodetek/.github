@@ -21,7 +21,7 @@ jobs:
         id: auth
         with:
           project_id: savvy-container-267322
-          workload_identity_provider: projects/47855944311/locations/global/workloadIdentityPools/github/providers/oidc
+          workload_identity_provider: projects/47855944311/locations/global/workloadIdentityPools/github-actions/providers/github-actions
           service_account: ${{ env.SA }}
 
       # https://github.com/google-github-actions/setup-gcloud
@@ -33,8 +33,6 @@ jobs:
       # .. enable APIs: Admin SDK API, IAM Service Account Credentials API
       - run: |
           set -x
-
-          gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
 
           gcloud auth list
 
