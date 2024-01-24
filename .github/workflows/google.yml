@@ -6,10 +6,6 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  SA: ${{ vars.SA }}
-  CUSTOMER: ${{ vars.CUSTOMER }}
-
 jobs:
   google-admin:
     runs-on: ubuntu-latest
@@ -20,9 +16,9 @@ jobs:
       - uses: google-github-actions/auth@v2
         id: auth
         with:
-          project_id: savvy-container-267322
-          workload_identity_provider: projects/47855944311/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-          service_account: ${{ env.SA }}
+          project_id: ${{ vars.PROJECT_ID }}
+          workload_identity_provider: $${{ vars.WORKLOAD_ID_PROVIDER }}
+          service_account: ${{ vars.SA }}
 
       # https://github.com/google-github-actions/setup-gcloud
       - uses: google-github-actions/setup-gcloud@v2
@@ -41,7 +37,7 @@ jobs:
           gcloud auth list
 
           # https://developers.google.com/admin-sdk
-          urls='https://admin.googleapis.com/admin/directory/v1/users?customer=${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/customers/${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/groups?customer=${{ env.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/customer/${{ env.CUSTOMER }}/schemas'
+          urls='https://admin.googleapis.com/admin/directory/v1/users?customer=${{ vars.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/customers/${{ vars.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/groups?customer=${{ vars.CUSTOMER }} https://admin.googleapis.com/admin/directory/v1/customer/${{ vars.CUSTOMER }}/schemas'
 
           scopes='https://www.googleapis.com/auth/admin.directory.customer.readonly,https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly,https://www.googleapis.com/auth/admin.directory.device.mobile.readonly,https://www.googleapis.com/auth/admin.directory.domain.readonly,https://www.googleapis.com/auth/admin.directory.group.member.readonly,https://www.googleapis.com/auth/admin.directory.orgunit.readonly,https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly,https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly,https://www.googleapis.com/auth/admin.directory.user.alias.readonly,https://www.googleapis.com/auth/admin.directory.user.readonly,https://www.googleapis.com/auth/admin.directory.userschema.readonly'
 
