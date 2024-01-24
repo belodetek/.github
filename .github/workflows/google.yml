@@ -32,6 +32,7 @@ jobs:
 
           gcloud auth list
 
+          # https://developers.google.com/admin-sdk/directory/reference/rest/v1/users
           curl https://admin.googleapis.com/admin/directory/v1/users?customer=C01jv3tsi \
             --header "Authorization: Bearer $(gcloud auth print-access-token)" \
             | jq -r '.users[].id'
