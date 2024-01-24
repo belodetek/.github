@@ -27,10 +27,16 @@ jobs:
       # https://github.com/google-github-actions/setup-gcloud
       - uses: google-github-actions/setup-gcloud@v2
 
-      # (Google Admin) https://admin.google.com/u/1/ac/roles
+      # (Google Workspaces Admin) https://admin.google.com/u/1/ac/roles
       # .. create a custom role and assign admin (service_account)
+      # .. grant relevant Admin API privileges
+      #
       # (Google Cloud) https://console.cloud.google.com/
-      # .. enable APIs: Admin SDK API, IAM Service Account Credentials API
+      # .. enable APIs:
+      #  * Admin SDK API
+      #  * IAM Service Account Credentials API
+      #  * Service Usage API
+      #  * Identity and Access Management (IAM) API
       - run: |
           gcloud auth list
 
