@@ -45,7 +45,7 @@ jobs:
           
           curl --fail https://www.googleapis.com/oauth2/v1/tokeninfo \
             --header 'Content-Type: application/x-www-form-urlencoded' \
-            --header 'X-Goog-User-Project: ${{ steps.auth.outputs.project_id }}'
+            --header 'X-Goog-User-Project: ${{ steps.auth.outputs.project_id }}' \
             --data "access_token=${token}" | jq -r .
 
           for url in ${urls}; do
