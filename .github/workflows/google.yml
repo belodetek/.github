@@ -12,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # https://github.com/google-github-actions/auth?tab=readme-ov-file#workload-identity-federation-through-a-service-account
       - uses: google-github-actions/auth@v2
         id: auth
         with:
@@ -19,6 +20,8 @@ jobs:
           workload_identity_provider: projects/47855944311/locations/global/workloadIdentityPools/github/providers/oidc
           service_account: my-service-account@savvy-container-267322.iam.gserviceaccount.com
 
+      # https://admin.google.com/u/1/ac/roles
+      # .. create role and assign admin (service account email)
       - uses: google-github-actions/setup-gcloud@v2
       - run: |
           set -x
