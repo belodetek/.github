@@ -1,0 +1,63 @@
+---
+stacks:
+  - name: github-oidc-belodetek
+    template: aws/aws-cf-templates/operations/github-openid-connect.yaml
+    params:
+      - GitHubRestriction=repo:belodetek/cfn-generic-custom-resource:*,repo:belodetek/.github:*
+      - RoleMaxSessionDuration=43200
+      - ManagedPolicyArns=arn:aws:iam::aws:policy/AWSCloudFormationFullAccess,arn:aws:iam::aws:policy/AmazonS3FullAccess,arn:aws:iam::aws:policy/IAMFullAccess,arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser,arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+    tags:
+      - Name=github-oidc
+      - Environment=belodetek
+      - cost-function=shared
+      - cost-type=iam
+    capabilities:
+      - CAPABILITY_IAM
+      - CAPABILITY_NAMED_IAM
+    role: arn:aws:iam::312433241086:role/github-oidc-belodetek-Role-exdwzug18ntp
+
+  - name: cloudformation-s3-resources-playground
+    template: aws/aws-cf-templates/state/s3.yaml
+    params:
+      - BucketName=cfn-601eb2aa-79a1-11ee-a866-0efcede062c7-us-east-1
+      - Versioning=false
+    tags:
+      - Name=cloudformation-s3-resources
+      - Environment=belodetek
+      - cost-function=shared
+      - cost-type=cloudformation
+    capabilities:
+      - CAPABILITY_IAM
+      - CAPABILITY_NAMED_IAM
+    role: arn:aws:iam::312433241086:role/github-oidc-belodetek-Role-exdwzug18ntp
+
+  - name: balena-os-images-import-s3-bucket
+    template: aws/aws-cf-templates/state/s3.yaml
+    params:
+      - BucketName=balena-7207e60f-b8a9-4119-8124-99f10d66817f-us-east-1
+      - Versioning=false
+    tags:
+      - Name=balena-os-images-import-s3-bucket
+      - Environment=belodetek
+      - cost-function=balena
+      - cost-type=s3
+    capabilities:
+      - CAPABILITY_IAM
+      - CAPABILITY_NAMED_IAM
+    region: us-east-1
+    role: arn:aws:iam::312433241086:role/github-oidc-belodetek-Role-exdwzug18ntp
+
+  - name: balena-os-images-import-iam-role
+    template: aws/balena/os/ami/vm-import.yaml
+    params:
+      - BucketName=balena-7207e60f-b8a9-4119-8124-99f10d66817f-us-east-1
+    tags:
+      - Name=balena-os-images-import-iam-role
+      - Environment=belodetek
+      - cost-function=balena
+      - cost-type=iam
+    capabilities:
+      - CAPABILITY_IAM
+      - CAPABILITY_NAMED_IAM
+    region: us-east-1
+    role: arn:aws:iam::312433241086:role/github-oidc-belodetek-Role-exdwzug18ntp

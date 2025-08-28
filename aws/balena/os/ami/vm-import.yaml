@@ -1,0 +1,87 @@
+---
+# Copyright 2025 belodetek.io
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+AWSTemplateFormatVersion: 2010-09-09
+Description: https://docs.aws.amazon.com/vm-import/latest/userguide/required-permissions.html
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Default parameters
+      Parameters:
+      - PermissionsBoundary
+      - BucketName
+Parameters:
+  PermissionsBoundary:
+    Description: Optional ARN for a policy that will be used as the permission boundary for all roles created by this template.
+    Type: String
+    Default: ''
+  BucketName:
+    Type: String
+Conditions:
+  HasPermissionsBoundary: !Not [!Equals [!Ref PermissionsBoundary, '']]
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: vmie.amazonaws.com
+          Action: sts:AssumeRole
+          Condition:
+            StringEquals:
+              sts:Externalid: vmimport
+      PermissionsBoundary: !If [HasPermissionsBoundary, !Ref PermissionsBoundary, !Ref 'AWS::NoValue']
+      Policies:
+      - PolicyName: s3
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:GetBucketLocation
+            - s3:GetObject
+            - s3:ListBucket
+            - s3:PutObject
+            - s3:GetBucketAcl
+            Resource:
+            - !Sub arn:${AWS::Partition}:s3:::${BucketName}
+            - !Sub 'arn:${AWS::Partition}:s3:::${BucketName}/*'
+      - PolicyName: ec2
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - ec2:ModifySnapshotAttribute
+            - ec2:CopySnapshot
+            - ec2:RegisterImage
+            - 'ec2:Describe*'
+            Resource: '*'
+Outputs:
+  TemplateID:
+    Description: belodetek.io template id.
+    Value: balena/balena-os/ami
+  TemplateVersion:
+    Description: belodetek.io template version.
+    Value: __VERSION__
+  StackName:
+    Description: Stack name.
+    Value: !Sub ${AWS::StackName}
+  RoleArn:
+    Description: The ARN of the role.
+    Value: !Sub ${Role.Arn}
+    Export:
+      Name: !Sub ${AWS::StackName}-RoleArn
