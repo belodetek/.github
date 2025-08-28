@@ -1,4 +1,14 @@
 - commits:
+    - subject: "minor: Create VM Import/Export role/permissions"
+      hash: 0ec435dd299dc63f7daefe87186e49d9c66a2da1
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.0
+  title: ""
+  date: 2025-08-28T03:38:01.555Z
+- commits:
     - subject: IAM full access
       hash: 06b3c4d52a68fb63af005de27abbd6d68c4cbef6
       body: ""
