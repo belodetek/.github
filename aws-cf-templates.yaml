@@ -5,7 +5,7 @@ stacks:
     params:
       - GitHubRestriction=repo:belodetek/cfn-generic-custom-resource:*,repo:belodetek/.github:*
       - RoleMaxSessionDuration=43200
-      - ManagedPolicyArns=arn:aws:iam::aws:policy/AWSCloudFormationFullAccess,arn:aws:iam::aws:policy/AmazonS3FullAccess,arn:aws:iam::aws:policy/IAMFullAccess,arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser,arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser
+      - ManagedPolicyArns=arn:aws:iam::aws:policy/AWSCloudFormationFullAccess,arn:aws:iam::aws:policy/AmazonS3FullAccess,arn:aws:iam::aws:policy/IAMFullAccess,arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser,arn:aws:iam::aws:policy/AmazonElasticContainerRegistryPublicPowerUser,arn:aws:iam::aws:policy/AmazonEC2FullAccess,arn:aws:iam::aws:policy/AWSMarketplaceAmiIngestion
     tags:
       - Name=github-oidc
       - Environment=belodetek

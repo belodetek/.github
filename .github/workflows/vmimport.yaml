@@ -1,0 +1,499 @@
+---
+# https://github.com/balena-os/balena-yocto-scripts/blob/master/.github/workflows/yocto-build-deploy.yml
+# https://github.com/balena-os/balena-yocto-scripts/blob/master/automation/entry_scripts/balena-generate-ami.sh
+name: aws-ami-from-balena-os-image
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+  id-token: write  # AWS GitHub OIDC required: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  # cancel jobs in progress for updated PRs, but not merge or tag events
+  cancel-in-progress: ${{ github.event.action == 'synchronize' }}
+
+env:
+  AWS_DEFAULT_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+  AWS_IAM_ROLE: ${{ vars.AWS_IAM_ROLE }}
+  AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+  AWS_SECURITY_GROUP_ID: ${{ vars.AWS_SECURITY_GROUP_ID }}
+  AWS_SUBNET_IDS: ${{ vars.AWS_SUBNET_IDS }}
+  BALENA_TEST_ORG: ${{ vars.BALENA_TEST_ORG || 'belodetek' }}
+  VMIMPORT_S3_BUCKET: ${{ vars.VMIMPORT_S3_BUCKET }}
+
+jobs:
+  import-vm:
+    defaults:
+      run:
+        shell: bash --noprofile --norc -eo pipefail -x {0}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+        - generic-amd64
+        - generic-aarch64
+        include:
+        - target: generic-amd64
+          balena_app_name: belodetek/cloud-config-amd64  #  balena_os/cloud-config-amd64
+          balena_app_commit: 1678f684c300862750ba9dbef1532b49
+          # renovate: datasource=github-releases depName=balena-os/balena-generic
+          balena_os_version: v6.5.53+rev4
+          development_mode: true
+          ec2_instance_type: c7a.medium
+        - target: generic-aarch64
+          balena_app_name: belodetek/cloud-config-aarch64  #  .. cloud-config-aarch64
+          balena_app_commit: 53dd5b9be8feaad89c132473c5ae04e2
+          # renovate: datasource=github-releases depName=balena-os/balena-generic
+          balena_os_version: v6.5.53+rev4
+          development_mode: true
+          ec2_instance_type: m8g.medium
+
+    steps:
+    # https://github.com/unfor19/install-aws-cli-action
+    - uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # v1
+
+    - uses: aws-actions/configure-aws-credentials@1b2b73eb6a459c3a91fde76ba4c255e5b4b8e94e
+      with:
+        aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+        role-session-name: github-${{ github.job }}-${{ github.run_id }}-${{ github.run_attempt }}
+        # balena-io/environments-bases: aws/balenacloud/ephemeral-tests/balena-tests-iam.yml
+        role-to-assume: ${{ vars.AWS_IAM_ROLE }}
+        mask-aws-account-id: false
+
+    - name: Set AWS/EC2/AMI image architecture string from balena device type
+      id: ami
+      run: |
+        if [[ '${{ matrix.target }}' =~ "amd64" ]]; then
+            echo 'arch=x86_64' >>"${GITHUB_OUTPUT}"
+        elif [[ '${{ matrix.target }}' =~ "aarch64" ]]; then
+            echo 'arch=arm64' >>"${GITHUB_OUTPUT}"
+        else
+            exit 1
+        fi
+        echo "name=balena-os-${{ matrix.balena_os_version }}-${{ matrix.target }}" \
+          | sed 's/+/-/g' >>"${GITHUB_OUTPUT}"
+
+    - name: Check if the AWS/EC2 AMI already exists for this version of balenaOS
+      id: check
+      env:
+        AMI_NAME: ${{ steps.ami.outputs.name }}
+      run: |
+        [ -z "$AMI_NAME" ] && exit 1
+
+        existing_image_id=$(aws ec2 describe-images --output text \
+            --filters "Name=name,Values=${AMI_NAME}" \
+            --query 'Images[*].[ImageId]')
+
+        if [ -n "$existing_image_id" ]; then
+            echo 'skip=true' >>"${GITHUB_OUTPUT}"
+        fi
+
+    # https://github.com/balena-io-examples/setup-balena-action
+    - uses: balena-io-examples/setup-balena-action@d3ab8f4a2c2878a2ec4725ea0f7f28aec09b7cc9 # v0.0.31
+      if: steps.check.outputs.skip != 'true'
+      env:
+        # renovate: datasource=github-releases depName=balena-io/balena-cli
+        BALENA_CLI_VERSION: v22.3.0
+      with:
+        cli-version: ${{ env.BALENA_CLI_VERSION }}
+        balena-token: ${{ secrets.BALENA_API_KEY }}
+
+    - uses: actions/cache/restore@v4
+      id: cache
+      if: steps.check.outputs.skip != 'true'
+      continue-on-error: true
+      with:
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ matrix.balena_os_version }}
+        path: balena.img
+
+    - name: download balena.img
+      id: download
+      if: steps.cache.outputs.cache-hit != 'true' && steps.check.outputs.skip != 'true'
+      run: |
+        balena os download ${{ matrix.target }} -o balena.img --version ${{ matrix.balena_os_version }}
+
+    - uses: actions/cache/save@v4
+      if: always() && steps.download.outcome == 'success' && steps.check.outputs.skip != 'true'
+      with:
+        path: balena.img
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ matrix.balena_os_version }}
+
+    - uses: actions/cache/restore@v4
+      id: preloaded
+      if: steps.check.outputs.skip != 'true'
+      continue-on-error: true
+      with:
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ matrix.balena_os_version }}-${{ matrix.balena_app_commit }}
+        path: balena.img
+
+    - name: Pre-load cloud-config app to handle cloud provider metadata interfaces
+      id: preload
+      if: steps.preloaded.outputs.cache-hit != 'true' && steps.check.outputs.skip != 'true'
+      run: |
+        balena preload --debug --pin-device-to-release balena.img \
+          --fleet ${{ matrix.balena_app_name }} \
+          --commit ${{ matrix.balena_app_commit }}
+
+    - uses: actions/cache/save@v4
+      if: always() && steps.preload.outcome == 'success' && steps.check.outputs.skip != 'true'
+      with:
+        path: balena.img
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ matrix.balena_os_version }}-${{ matrix.balena_app_commit }}
+
+    - name: Copy balenaOS image to AWS/S3 for import
+      id: s3
+      if: steps.check.outputs.skip != 'true'
+      env:
+        VMIMPORT_S3_BUCKET: ${{ env.VMIMPORT_S3_BUCKET }}
+      run: |
+          s3_key="balena-${RANDOM}.tmp"
+          s3_url="s3://${VMIMPORT_S3_BUCKET}/preloaded-images/${s3_key}"
+
+          aws s3 cp --no-progress balena.img "${s3_url}"
+
+          echo "key=${s3_key}" >>"${GITHUB_OUTPUT}"
+          echo "url=${s3_url}" >>"${GITHUB_OUTPUT}"
+
+    - name: Create AWS/EC2 EBS snapshot from balenaOS image
+      id: snapshot
+      if: steps.check.outputs.skip != 'true'
+      env:
+        AMI_NAME: ${{ steps.ami.outputs.name }}
+        VMIMPORT_S3_BUCKET: ${{ env.VMIMPORT_S3_BUCKET }}
+        S3_KEY: ${{ steps.s3.outputs.key }}
+      run: |
+        [ -z "$AMI_NAME" ] && exit 1
+
+        import_task_id=$(aws ec2 import-snapshot \
+          --description "snapshot-${AMI_NAME}" \
+          --disk-container "Description=balena-os,Format=RAW,UserBucket={S3Bucket=${VMIMPORT_S3_BUCKET},S3Key=preloaded-images/${S3_KEY}}" \
+          | jq -r .ImportTaskId)
+        
+        while true; do
+            response="$(aws ec2 describe-import-snapshot-tasks --import-task-ids "${import_task_id}")"
+            status_message="$(echo "${response}" | jq -r ".ImportSnapshotTasks[].SnapshotTaskDetail.StatusMessage")"
+            progress="$(echo "${response}" | jq -r ".ImportSnapshotTasks[].SnapshotTaskDetail.Progress")"
+            status="$(echo "${response}" | jq -r ".ImportSnapshotTasks[].SnapshotTaskDetail.Status")"
+            echo "::info::${status_message}: ${progress}% (${status})"
+
+            if [[ "$status" =~ "completed" ]]; then
+                break
+            fi
+          
+            if [[ "$status" =~ "deleting" ]]; then
+                echo "::error::${status_message}"
+                exit 1
+            fi
+            sleep $(( (RANDOM % 30) + 30))s
+        done
+  
+        snapshot_id=$(aws ec2 describe-import-snapshot-tasks --import-task-ids "${import_task_id}" \
+          | jq -r '.ImportSnapshotTasks[].SnapshotTaskDetail.SnapshotId')
+        echo "id=${snapshot_id}" >>"${GITHUB_OUTPUT}"
+
+    - name: Create AWS/EC2 AMI from snapshot
+      id: image
+      if: steps.check.outputs.skip != 'true'
+      env:
+        AMI_ARCHITECTURE: ${{ steps.ami.outputs.arch }}
+        AMI_BOOT_MODE: uefi
+        AMI_EBS_DELETE_ON_TERMINATION: true
+        AMI_EBS_VOLUME_SIZE: 8
+        AMI_EBS_VOLUME_TYPE: gp3
+        AMI_NAME: ${{ steps.ami.outputs.name }}
+        AMI_ROOT_DEVICE_NAME: /dev/sda1
+        AMI_SNAPSHOT_ID: ${{ steps.snapshot.outputs.id }}
+      run: |
+        [ -z "$AMI_NAME" ] && exit 1
+
+        existing_image_id=$(aws ec2 describe-images --output text \
+            --filters "Name=name,Values=${AMI_NAME}" \
+            --query 'Images[*].[ImageId]')
+  
+        if [ -n "$existing_image_id" ]; then    
+            exit 1
+        fi
+  
+        # only supported on x86_64
+        if [ "${AMI_ARCHITECTURE}" = "x86_64" ]; then
+            tpm_opts="--tpm-support v2.0"
+        fi
+
+        block_device_mappings="DeviceName=${AMI_ROOT_DEVICE_NAME},Ebs={
+            DeleteOnTermination=${AMI_EBS_DELETE_ON_TERMINATION},
+            SnapshotId=${AMI_SNAPSHOT_ID},
+            VolumeSize=${AMI_EBS_VOLUME_SIZE},
+            VolumeType=${AMI_EBS_VOLUME_TYPE}
+        }"
+  
+        # shellcheck disable=SC2086
+        image_id=$(aws ec2 register-image \
+          --name "${AMI_NAME}" \
+          --architecture "${AMI_ARCHITECTURE}" \
+          --virtualization-type hvm \
+          ${tpm_opts} \
+          --ena-support \
+          --root-device-name "${AMI_ROOT_DEVICE_NAME}" \
+          --boot-mode "${AMI_BOOT_MODE}" \
+          --block-device-mappings "${block_device_mappings}" | jq -r .ImageId)
+        [ -z "${image_id}" ] && exit 1
+  
+        aws ec2 create-tags --resources "${image_id}" --tags Key=Name,Value="${AMI_NAME}"  
+        echo "id=${image_id}" >>"${GITHUB_OUTPUT}"
+
+    - name: Crete balenaCloud fleet to test the image
+      id: test-fleet
+      if: steps.check.outputs.skip != 'true'
+      env:
+        BALENA_TEST_ORG: ${{ env.BALENA_TEST_ORG }}
+      run: |
+        ami_test_fleet=$(openssl rand -hex 4)
+        >&2 balena fleet create "${ami_test_fleet}" \
+          --organization "${BALENA_TEST_ORG}" \
+          --type '${{ matrix.target }}'
+ 
+        key_file="${HOME}/.ssh/id_ed25519"  
+        mkdir -p "$(dirname "${_key_file}")"
+        ssh-keygen -t ed25519 -N "" -q -f "${key_file}"
+        # shellcheck disable=SC2046
+        >&2 eval $(ssh-agent)
+        >&2 ssh-add
+        balena ssh-key add "${ami_test_fleet}" "${key_file}.pub"
+   
+        uuid="$(balena device register "${BALENA_TEST_ORG}/${ami_test_fleet}" | awk '{print $4}')"
+        echo "uuid=${uuid}" >>"${GITHUB_OUTPUT}"
+ 
+        if [ '${{ matrix.development_mode }}' = true ]; then 
+            _dev_mode="--dev";
+        else
+            _dev_mode="";
+        fi
+ 
+        config_json=$(mktemp)
+        echo "config_json=${config_json}" >>"${GITHUB_OUTPUT}"
+        >&2 balena config generate \
+          --network ethernet \
+          --version '${{ matrix.balena_os_version }}' \
+          --device "${uuid}" \
+          --appUpdatePollInterval 5 \
+          --output "${config_json}" \
+          ${_dev_mode}
+ 
+        if [ ! -f "${config_json}" ]; then
+            exit 1
+        else
+            new_uuid=$(jq -r '.uuid' "${config_json}")
+            if [ "${new_uuid}" != "${uuid}" ]; then
+                exit 1
+            fi
+        fi
+        echo "name=${BALENA_TEST_ORG}/${ami_test_fleet}" >>"${GITHUB_OUTPUT}"
+  
+    - name: Test AWS/EC2 AMI image
+      id: test
+      if: steps.check.outputs.skip != 'true'
+      env:
+        AMI_NAME: ${{ steps.ami.outputs.name }}
+        AWS_SECURITY_GROUP_ID: ${{ env.AWS_SECURITY_GROUP_ID }}
+        AWS_SUBNET_IDS: ${{ env.AWS_SUBNET_IDS }}
+        CONFIG_JSON: ${{ steps.test-fleet.outputs.config_json }}
+        UUID: ${{ steps.test-fleet.outputs.uuid }}
+      run: |
+        [ -z "$AMI_NAME" ] && exit 1
+
+        _ami_image_id=$(aws ec2 describe-images --output text \
+          --filters "Name=name,Values=${AMI_NAME}" \
+          --query 'Images[*].[ImageId]')
+   
+        if [ -z "$_ami_image_id" ]; then
+            exit 1
+        fi
+        echo "ami_image_id=${_ami_image_id}" >>"${GITHUB_OUTPUT}"
+   
+        for subnet_id in ${AWS_SUBNET_IDS}; do
+            _instance_id=$(aws ec2 run-instances --image-id "${_ami_image_id}" --count 1 \
+              --instance-type '${{ matrix.ec2_instance_type }}' \
+              --tag-specifications \
+              "ResourceType=instance,Tags=[{Key=Name,Value=test-${AMI_NAME}}]" \
+              "ResourceType=volume,Tags=[{Key=Name,Value=test-${AMI_NAME}}]" \
+              --subnet-id "${subnet_id}" \
+              --security-group-ids "${AWS_SECURITY_GROUP_ID}" \
+              --user-data "file://${CONFIG_JSON}" | jq -r '.Instances[0].InstanceId' || true)
+
+            [ -n "$_instance_id" ] && break
+        done
+   
+        if [ -z "${_instance_id}" ]; then
+            exit 1
+        fi
+        echo "instance_id=${_instance_id}" >>"${GITHUB_OUTPUT}"
+        
+        aws ec2 wait instance-running --instance-ids "${_instance_id}"
+        aws ec2 wait instance-status-ok --instance-ids "${_instance_id}"
+        
+        until echo 'balena ps -q -f name=balena_supervisor | xargs balena inspect \
+          | jq -r ".[] | select(.State.Health.Status!=null).Name + \":\" + .State.Health.Status"; exit' \
+          | balena device ssh "${UUID}" | grep -q ":healthy"; do
+            echo "::info::Waiting for balena-supervisor..."
+            sleep $(( (RANDOM % 30) + 30 ))s
+        done
+
+    - name: Make AMI public
+      if: steps.test.outcome == 'success' && steps.check.outputs.skip != 'true'
+      env:
+        AMI_ARCHITECTURE: ${{ steps.ami.outputs.arch }}
+        AMI_IMAGE_ID: ${{ steps.test.outputs.ami_image_id }}
+        AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+        AMI_NAME: ${{ steps.ami.outputs.name }}
+        # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-quotas.html
+        AWS_AMI_PUBLIC_QUOTA: 2
+      run: |   
+        [ -z "$AMI_NAME" ] && exit 0
+
+        _ami_public_images_count=$(aws ec2 describe-images \
+          --owners "self" \
+          --filters "Name=name,Values=${AMI_NAME%%-*}" \
+          "Name=architecture,Values=${AMI_ARCHITECTURE}" \
+          "Name=is-public,Values=true" | jq '.Images | length')
+        
+        if [ "$_ami_public_images_count" -ge "$AWS_AMI_PUBLIC_ARCH_QUOTA"  ]; then
+            _ami_oldest_image_id=$(aws ec2 describe-images \
+              --owners "self" \
+              --filters "Name=name,Values=${AMI_NAME%%-*}" \
+              "Name=architecture,Values=${AMI_ARCHITECTURE}" \
+              "Name=is-public,Values=true" \
+              --query 'sort_by(Images, &CreationDate)[0].ImageId')
+        
+            if [ -n "$_ami_oldest_image_id" ]; then
+                if [ "$(aws ec2 describe-images --image-ids "${_ami_oldest_image_id}" \
+                  | jq -r '.Images[].Public')" = "true" ]; then
+                    if aws ec2 modify-image-attribute \
+                      --image-id "${_ami_oldest_image_id}" \
+                      --launch-permission '{"Remove":[{"Group":"all"}]}'; then
+                        if ! [ "$(aws ec2 describe-images --image-ids "${_ami_oldest_image_id}" \
+                          | jq -r '.Images[].Public')" = "false" ]; then
+                            exit 1
+                        fi
+                    fi
+                fi
+            fi
+        fi
+        
+        _ami_snapshot_id=$(aws ec2 describe-images \
+          --region="${AWS_DEFAULT_REGION}" \
+          --image-ids "${AMI_IMAGE_ID}" | jq -r '.Images[].BlockDeviceMappings[].Ebs.SnapshotId')
+ 
+        if [ -n "$_ami_snapshot_id" ]; then
+            if aws ec2 modify-snapshot-attribute --operation-type add \
+              --region "${AWS_DEFAULT_REGION}" \
+              --snapshot-id "${_ami_snapshot_id}" \
+              --attribute createVolumePermission \
+              --group-names all; then
+                if ! [ "$(aws ec2 describe-snapshot-attribute \
+                  --region "${AWS_DEFAULT_REGION}" \
+                  --snapshot-id "${_ami_snapshot_id}" \
+                  --attribute createVolumePermission | jq -r '.CreateVolumePermissions[].Group')" == "all" ]; then
+                    exit 1
+                fi
+            fi
+        else
+            exit 1
+        fi
+        
+        if aws ec2 modify-image-attribute --image-id "${AMI_IMAGE_ID}" --launch-permission "Add=[{Group=all}]"; then
+            if ! [ "$(aws ec2 describe-images --image-ids "${AMI_IMAGE_ID}" | jq -r '.Images[].Public')" = "true" ]; then
+                exit 1
+            fi
+        fi
+
+    - name: Clean up EoL images
+      continue-on-error: true
+      if: always()
+      env:
+        AMI_NAME: ${{ steps.ami.outputs.name }}
+        # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-quotas.html
+        PERIOD: "1 years ago"
+      run: |
+        [ -z "$AMI_NAME" ] && exit 0
+
+        _date=$(date +%Y-%m-%d -d "${PERIOD}")
+
+        image_ids=$(aws ec2 describe-images --output text \
+          --filters "Name=name,Values=${AMI_NAME%%-*}-*" \
+          --owners "self" \
+          --query 'Images[?CreationDate<`'"${_date}"'`].[ImageId]')
+
+        for image_id in ${image_ids}; do
+            _snapshots="$(aws ec2 describe-images --output text\
+              --image-ids "${image_id}" \
+              --query 'Images[*].BlockDeviceMappings[*].Ebs.SnapshotId')"
+
+            if aws ec2 deregister-image --image-id "${image_id}"; then
+                if [ -n "$_snapshots" ]; then
+                    for snapshot in ${_snapshots}; do
+                        if ! aws ec2 delete-snapshot --snapshot-id "${snapshot}"; then
+                            echo "::warning::Could not remove snapshot ${snapshot}"
+                        fi
+                    done
+                fi
+            else
+                echo "::warning::Could not de-register image ${image_id}"
+            fi
+        done
+
+    - name: Clean up image on failure
+      continue-on-error: true
+      if: failure()
+      env:
+        AMI_IMAGE_ID: ${{ steps.image.outputs.id }}
+      run: |
+        if [ -n "$AMI_IMAGE_ID" ]; then
+            aws ec2 deregister-image --image-id "${AMI_IMAGE_ID}"
+        fi
+
+    - name: Clean up snapshot on failure
+      continue-on-error: true
+      if: failure()
+      env:
+        AMI_SNAPSHOT_ID: ${{ steps.snapshot.outputs.id }}
+      run: |
+        if [ -n "$AMI_SNAPSHOT_ID" ]; then
+            aws ec2 delete-snapshot --snapshot-id "${AMI_SNAPSHOT_ID}"
+        fi
+
+    - name: Terminate AWS/EC2 test instance
+      continue-on-error: true
+      if: always()
+      env:
+        EC2_INSTANCE_ID: ${{ steps.test.outputs.instance_id }}
+      run: |
+        [[ -z "$EC2_INSTANCE_ID" ]] && exit 0
+
+        aws ec2 terminate-instances --instance-ids "${EC2_INSTANCE_ID}"
+
+    - name: Delete temporary image from AWS/S3
+      continue-on-error: true
+      if: always()
+      env:
+        S3_URL: ${{ steps.s3.outputs.url }}
+      run: |
+        [[ -z "$S3_URL" ]] && exit 0
+
+        aws s3 rm "${S3_URL}"
+
+    - name: Clean up test fleet
+      continue-on-error: true
+      if: always()
+      env:
+        FLEET: ${{ steps.test-fleet.outputs.name }}
+      run: |
+        [ -z "$FLEET" ] && exit 0
+
+        _key_id=$(balena ssh-key list | grep "${FLEET#*/}" | awk '{print $1}')
+        balena ssh-key rm "${_key_id}" --yes
+
+        balena fleet rm "${FLEET}" --yes

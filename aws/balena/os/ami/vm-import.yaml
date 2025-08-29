@@ -35,6 +35,7 @@ Resources:
   Role:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: vmimport
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:

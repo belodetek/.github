@@ -1,0 +1,87 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    ":preserveSemverRanges",
+    "config:base",
+    "docker:enableMajor",
+    "helpers:pinGitHubActionDigests",
+    "regexManagers:dockerfileVersions",
+    "regexManagers:githubActionsVersions",
+    ":automergeStableNonMajor",
+    ":automergePatch",
+    ":automergeDigest",
+    ":semanticCommitsDisabled",
+    ":separateMultipleMajorReleases",
+    "group:vitestMonorepo"
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/tests/**",
+    "**/__fixtures__/**"
+  ],
+  "onboarding": false,
+  "autodiscover": false,
+  "allowPostUpgradeCommandTemplating": true,
+  "allowedPostUpgradeCommands": [
+    "^cd",
+    "^sed",
+    "^yq",
+    "^jq",
+    "^git"
+  ],
+  "requireConfig": "optional",
+  "repositories": [
+    "belodetek/.github"
+  ],
+  "printConfig": true,
+  "prHourlyLimit": 1,
+  "cloneSubmodules": true,
+  "pruneStaleBranches": true,
+  "rebaseWhen": "behind-base-branch",
+  "git-submodules": {
+    "enabled": true
+  },
+  "pre-commit": {
+    "enabled": true
+  },
+  "labels": ["renovate"],
+  "commitBody": "patch: Update {{depName}}\n",
+  "prConcurrentLimit": 1,
+  "automerge": false,
+  "automergeStrategy": "merge-commit",
+  "pinDigest": {
+    "commitBody": "patch: Update {{depName}}\n",
+    "enabled": true,
+    "automerge": true
+  },
+  "digest": {
+    "commitBody": "patch: Update {{depName}}\n",
+    "enabled": true,
+    "automerge": true
+  },
+  "lockFileMaintenance": {
+    "commitBody": "patch: Update {{depName}}\n",
+    "enabled": true,
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions", "git-submodules"],
+      "enabled": true,
+      "automerge": true
+    },
+    {
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "commitBody": "patch: Update {{depName}} from {{{replace 'v' '' currentVersion}}} to {{{replace 'v' '' newVersion}}}\n"
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^v?0/",
+      "automerge": true
+    }
+  ]
+}
