@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Add GH datasources"
+      hash: d04f56efdc8ba7a5643d37f7ed24301dfc962835
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.7
+  title: ""
+  date: 2025-08-30T03:54:24.665Z
+- commits:
     - subject: "patch: Enable regex manager"
       hash: f713dfc1fb4e0161246da1ff89bbd934449d1fbf
       body: ""
