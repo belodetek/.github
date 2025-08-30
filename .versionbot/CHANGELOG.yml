@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Link to hostapp assets"
+      hash: 117114e302439b3d6519b0098ed0a1a155a5ca52
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.15
+  title: ""
+  date: 2025-08-30T21:50:49.806Z
+- commits:
     - subject: "patch: Add tags and deprecation policy"
       hash: 22a65fdc6a1600ad335a23e5a0336af7d3cceb9c
       body: ""
