@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Use custom commitMessagePrefix"
+      hash: e836690a28a4585c3d8420a65a96133848fc6ec5
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.3
+  title: ""
+  date: 2025-08-30T03:29:38.052Z
+- commits:
     - subject: "patch: Use custom commit message"
       hash: 86e350a307ed46828126493bc1dc36becae8c1a2
       body: ""
