@@ -74,6 +74,14 @@
   },
   "packageRules": [
     {
+      "matchDatasources": [
+        "github-releases",
+        "github-tags"
+      ],
+      "enabled": true,
+      "automerge": true
+    },
+    {
       "matchManagers": [
         "github-actions",
         "git-submodules",
