@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Pin dependencies"
+      hash: 3e1af33d624a70e7409567b0ec6b24c744d2e4bb
+      body: Update actions/cache
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.4
+  title: ""
+  date: 2025-08-30T03:34:53.405Z
+- commits:
     - subject: "patch: Use custom commitMessagePrefix"
       hash: e836690a28a4585c3d8420a65a96133848fc6ec5
       body: ""
