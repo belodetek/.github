@@ -21,7 +21,7 @@ jobs:
           service_account: ${{ vars.SA }}
 
       # https://github.com/google-github-actions/setup-gcloud
-      - uses: google-github-actions/setup-gcloud@e427ad8a34f8676edf47cf7d7925499adf3eb74f # v2
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3
 
       # (Google Workspaces Admin) https://admin.google.com/u/1/ac/roles
       # .. create a custom role and assign admin (service_account)
