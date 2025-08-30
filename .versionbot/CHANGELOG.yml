@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update google-github-actions/setup-gcloud action to v3"
+      hash: 3191f47b1e238c78deb353574bdf7400083e4075
+      body: Update google-github-actions/setup-gcloud from 2 to 3
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.11
+  title: ""
+  date: 2025-08-30T04:11:56.274Z
+- commits:
     - subject: "patch: Update google-github-actions/auth action to v3"
       hash: a8fd74ca42328b205dd46e97b938119b5a81ebad
       body: Update google-github-actions/auth from 2 to 3
