@@ -49,22 +49,26 @@
     "enabled": true
   },
   "labels": ["renovate"],
-  "commitMessageAction": "patch: {{depName}}\n",
+  "commitMessagePrefix": "patch: ",
+  "commitBody": "Update {{depName}}\n",
   "prConcurrentLimit": 1,
   "automerge": false,
   "automergeStrategy": "merge-commit",
   "pinDigest": {
-    "commitMessageAction": "patch: {{depName}}\n",
+    "commitMessagePrefix": "patch: ",
+    "commitBody": "Update {{depName}}\n",
     "enabled": true,
     "automerge": true
   },
   "digest": {
-    "commitMessageAction": "patch: {{depName}}\n",
+    "commitMessagePrefix": "patch: ",
+    "commitBody": "Update {{depName}}\n",
     "enabled": true,
     "automerge": true
   },
   "lockFileMaintenance": {
-    "commitMessageAction": "patch: {{depName}}\n",
+    "commitMessagePrefix": "patch: ",
+    "commitBody": "Update {{depName}}\n",
     "enabled": true,
     "automerge": true
   },
@@ -76,7 +80,7 @@
     },
     {
       "matchUpdateTypes": ["major", "minor", "patch"],
-      "commitMessageAction": "patch: {{depName}} from {{{replace 'v' '' currentVersion}}} to {{{replace 'v' '' newVersion}}}\n"
+      "commitBody": "Update {{depName}} from {{{replace 'v' '' currentVersion}}} to {{{replace 'v' '' newVersion}}}\n"
     },
     {
       "matchUpdateTypes": ["minor", "patch"],
