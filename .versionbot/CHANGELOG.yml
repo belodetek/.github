@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Trigger workflow on PRs (Renovate)"
+      hash: da9603c3d97a9a2b25e121fd31e499f4208ed06e
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.12
+  title: ""
+  date: 2025-08-30T04:22:14.046Z
+- commits:
     - subject: "patch: Update google-github-actions/setup-gcloud action to v3"
       hash: 3191f47b1e238c78deb353574bdf7400083e4075
       body: Update google-github-actions/setup-gcloud from 2 to 3
