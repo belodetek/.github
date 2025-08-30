@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update google-github-actions/auth action to v3"
+      hash: a8fd74ca42328b205dd46e97b938119b5a81ebad
+      body: Update google-github-actions/auth from 2 to 3
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.10
+  title: ""
+  date: 2025-08-30T04:10:10.288Z
+- commits:
     - subject: "patch: Allow default regex match strings"
       hash: ac82a8c3e208563b206251527c4fd0b7265c69df
       body: ""
