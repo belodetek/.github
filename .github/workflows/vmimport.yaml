@@ -247,7 +247,12 @@ jobs:
           --block-device-mappings "${block_device_mappings}" | jq -r .ImageId)
         [ -z "${image_id}" ] && exit 1
   
-        aws ec2 create-tags --resources "${image_id}" --tags Key=Name,Value="${AMI_NAME}"  
+        aws ec2 create-tags --resources "${image_id}" \
+          --tags Key=Name,Value="${AMI_NAME}" \
+          Key=publisher,Value="belodetek" \
+          Key=email,Value="team@belodetek.io" \
+          Key=github,Value="https://github.com/belodetek"
+
         echo "id=${image_id}" >>"${GITHUB_OUTPUT}"
 
     - name: Crete balenaCloud fleet to test the image
@@ -414,6 +419,20 @@ jobs:
                 exit 1
             fi
         fi
+
+    - name: Set image deprecation
+      if: steps.test.outcome == 'success' && steps.check.outputs.skip != 'true'
+      env:
+        AMI_IMAGE_ID: ${{ steps.test.outputs.ami_image_id }}
+        PERIOD: "now +1 year"
+      run: |
+        [ -z "$AMI_NAME" ] && exit 0
+
+        deprecate_at=$(date +%Y-%m-%dT%H:%M:%SZ -d "${PERIOD}")
+
+        aws ec2 enable-image-deprecation \
+          --image-id "${AMI_IMAGE_ID}" \
+          --deprecate-at "${deprecate_at}"
 
     - name: Clean up EoL images
       continue-on-error: true
