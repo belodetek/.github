@@ -49,22 +49,22 @@
     "enabled": true
   },
   "labels": ["renovate"],
-  "commitBody": "patch: Update {{depName}}\n",
+  "commitMessageAction": "patch: {{depName}}\n",
   "prConcurrentLimit": 1,
   "automerge": false,
   "automergeStrategy": "merge-commit",
   "pinDigest": {
-    "commitBody": "patch: Update {{depName}}\n",
+    "commitMessageAction": "patch: {{depName}}\n",
     "enabled": true,
     "automerge": true
   },
   "digest": {
-    "commitBody": "patch: Update {{depName}}\n",
+    "commitMessageAction": "patch: {{depName}}\n",
     "enabled": true,
     "automerge": true
   },
   "lockFileMaintenance": {
-    "commitBody": "patch: Update {{depName}}\n",
+    "commitMessageAction": "patch: {{depName}}\n",
     "enabled": true,
     "automerge": true
   },
@@ -76,7 +76,7 @@
     },
     {
       "matchUpdateTypes": ["major", "minor", "patch"],
-      "commitBody": "patch: Update {{depName}} from {{{replace 'v' '' currentVersion}}} to {{{replace 'v' '' newVersion}}}\n"
+      "commitMessageAction": "patch: {{depName}} from {{{replace 'v' '' currentVersion}}} to {{{replace 'v' '' newVersion}}}\n"
     },
     {
       "matchUpdateTypes": ["minor", "patch"],
