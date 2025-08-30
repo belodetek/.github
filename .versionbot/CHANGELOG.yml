@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Use custom commit message"
+      hash: 86e350a307ed46828126493bc1dc36becae8c1a2
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.2
+  title: ""
+  date: 2025-08-30T03:21:35.436Z
+- commits:
     - subject: "patch: Add balenaOS AMI pipeline"
       hash: 3fdc2658a09c0e345167ac298a51b2a4061e31f3
       body: ""
