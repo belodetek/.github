@@ -73,7 +73,7 @@ jobs:
         run: echo "RENOVATE_DRY_RUN=full" >>"${GITHUB_ENV}"
         if: inputs.dry_run || github.event_name == 'pull_request'
 
-      - uses: actions/cache/restore@v4
+      - uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
         id: cache
         with:
           key: ${{ env.cache_key }}
@@ -122,7 +122,7 @@ jobs:
               }
             ]
 
-      - uses: actions/cache/save@v4
+      - uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
         if: steps.cache.outputs.cache-hit != true && github.event_name != 'pull_request_target' && env.RENOVATE_DRY_RUN != 'full'
         with:
           key: ${{ env.cache_key }}

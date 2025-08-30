@@ -10,10 +10,10 @@ jobs:
   google-admin:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
 
       # https://github.com/google-github-actions/auth?tab=readme-ov-file#workload-identity-federation-through-a-service-account
-      - uses: google-github-actions/auth@v2
+      - uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2
         id: auth
         with:
           project_id: ${{ vars.PROJECT_ID }}
@@ -21,7 +21,7 @@ jobs:
           service_account: ${{ vars.SA }}
 
       # https://github.com/google-github-actions/setup-gcloud
-      - uses: google-github-actions/setup-gcloud@v2
+      - uses: google-github-actions/setup-gcloud@e427ad8a34f8676edf47cf7d7925499adf3eb74f # v2
 
       # (Google Workspaces Admin) https://admin.google.com/u/1/ac/roles
       # .. create a custom role and assign admin (service_account)
