@@ -44,14 +44,14 @@ jobs:
         include:
         - target: generic-amd64
           # renovate: datasource=github-releases depName=balena-os/balena-generic
-          BALENA_OS_VERSION: v6.5.53+rev4
+          BALENA_OS_VERSION: v6.5.53
           balena_app_name: belodetek/cloud-config-amd64  #  balena_os/cloud-config-amd64
           balena_app_commit: 1678f684c300862750ba9dbef1532b49
           development_mode: true
           ec2_instance_type: c7a.medium
         - target: generic-aarch64
           # renovate: datasource=github-releases depName=balena-os/balena-generic
-          BALENA_OS_VERSION: v6.5.53+rev4
+          BALENA_OS_VERSION: v6.5.53
           balena_app_name: belodetek/cloud-config-aarch64  #  .. cloud-config-aarch64
           balena_app_commit: 53dd5b9be8feaad89c132473c5ae04e2
           development_mode: true
@@ -212,6 +212,7 @@ jobs:
         AMI_NAME: ${{ steps.ami.outputs.name }}
         AMI_ROOT_DEVICE_NAME: /dev/sda1
         AMI_SNAPSHOT_ID: ${{ steps.snapshot.outputs.id }}
+        BALENA_API_KEY: ${{ secrets.BALENA_API_KEY }}
       run: |
         [ -z "$AMI_NAME" ] && exit 1
 
@@ -246,12 +247,37 @@ jobs:
           --boot-mode "${AMI_BOOT_MODE}" \
           --block-device-mappings "${block_device_mappings}" | jq -r .ImageId)
         [ -z "${image_id}" ] && exit 1
-  
+
+        device_type='${{ matrix.target }}'
+        balena_os_version="$(printf '${{ matrix.BALENA_OS_VERSION }}' | jq -sRr '@uri')"
+        changelog_link="$(echo '${{ matrix.BALENA_OS_VERSION }}' | sed 's/\.//g' | sed 's/+//g')"
+        version_string="$(echo '${{ matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | cut -d'+' -f1)"
+        semver_build="$(echo '${{ matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | awk -F'+' '{print $2}')"
+        semver_major=$(echo "${version_string}" | cut -d'.' -f1)
+        semver_minor=$(echo "${version_string}" | cut -d'.' -f2)
+        semver_patch=$(echo "${version_string}" | cut -d'.' -f3)
+        revision="$(echo "${semver_build}" | sed 's/rev//g')"
+        revision="${revision:-0}"
+
+        response="$(curl -sf "https://api.balena-cloud.com/v7/application?\$select=is_for__device_type&\$expand=application_tag(\$select=tag_key,value),is_for__device_type(\$select=slug),owns__release(\$select=id,known_issue_list,raw_version,variant,phase;\$expand=release_tag(\$select=tag_key,value),belongs_to__application(\$select=id);\$filter=(semver_major%20eq%20${semver_major})%20and%20(semver_minor%20eq%20${semver_minor})%20and%20(semver_patch%20eq%20${semver_patch})%20and%20(semver_prerelease%20eq%20%27%27)%20and%20(semver_build%20eq%20%27${semver_build}%27)%20and%20(revision%20eq%20${revision})%20and%20(variant%20in%20(%27%27,%20%27prod%27)))&\$filter=(is_host%20eq%20true)%20and%20(is_for__device_type/any(dt:dt/slug%20in%20(%27${device_type}%27)))" \
+          -H "authorization: Bearer ${BALENA_API_KEY}")"
+
+        hostapp_id="$(echo "${response}" | jq -re .d[].owns__release[].belongs_to__application[].id)"
+        release_id="$(echo "${response}" | jq -re .d[].owns__release[].id)"
+        hostapp_release_url="https://dashboard.balena-cloud.com/apps/${hostapp_id}/releases/${release_id}/summary"
+        changelog_url="https://github.com/balena-os/balena-generic/blob/${balena_os_version}/CHANGELOG.md#${changelog_link}"
+
         aws ec2 create-tags --resources "${image_id}" \
           --tags Key=Name,Value="${AMI_NAME}" \
           Key=publisher,Value="belodetek" \
           Key=email,Value="team@belodetek.io" \
-          Key=github,Value="https://github.com/belodetek"
+          Key=github,Value="https://github.com/belodetek" \
+          Key=github-release,Value="https://github.com/balena-os/balena-generic/releases/tag/${balena_os_version}" \
+          Key=github-tag,Value="https://github.com/balena-os/balena-generic/tree/${balena_os_version}" \
+          Key=meta-changelog,Value='https://github.com/balena-os/meta-balena/blob/master/CHANGELOG.md' \
+          Key=changelog,Value="${changelog_url}" \
+          Key=hostapp-release,Value="${hostapp_release_url}" \
+          Key=license,Value='https://www.apache.org/licenses/LICENSE-2.0'
 
         echo "id=${image_id}" >>"${GITHUB_OUTPUT}"
 
