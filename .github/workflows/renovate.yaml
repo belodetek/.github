@@ -1,0 +1,130 @@
+---
+name: Renovate
+on:
+  schedule:
+    - cron: "0 0 * * 0"  # every Sunday at midnight UTC
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        type: boolean
+        default: false
+        description: If true, the Renovate will not make any changes
+        required: false
+
+permissions:
+  contents: read
+  packages: read  # Manage private ghcr.io dependencies
+
+env:
+  LOG_LEVEL: debug
+  # renovate: datasource=docker depName=renovate packageName=ghcr.io/renovatebot/renovate
+  RENOVATE_VERSION: 41.91.0
+
+# https://docs.github.com/en/actions/using-jobs/using-concurrency
+# https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # Expressions in the concurrency context do not have access
+  # to the entire github.event context so we cannot make advanced
+  # expressions beyond a few top level github event properties.
+
+  # See: https://github.com/orgs/community/discussions/69704#discussioncomment-7803351
+
+  # Cancel jobs in-progress for dry-runs or open PRs
+  cancel-in-progress: ${{ inputs.dry_run || github.event_name == 'pull_request' }}
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+
+    env:
+      # See https://github.com/marketplace/actions/renovate-bot-github-action#persisting-the-repository-cache
+      RENOVATE_REPOSITORY_CACHE: enabled
+      RENOVATE_CACHE_PRIVATE_PACKAGES: "true"
+      # This is the dir renovate provides -- if we set our own directory via cacheDir, we can run into permissions issues.
+      # It is also possible to cache a higher level of the directory, but it has minimal benefit. While renovate execution
+      # time gets faster, it also takes longer to upload the cache as it grows bigger.
+      cache_dir: /tmp/renovate/cache/renovate/repository
+      cache_key: renovate-cache-${{ github.repository_owner }}-${{ github.run_id }}
+      restore_key: renovate-cache-${{ github.repository_owner }}
+
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        with:
+          persist-credentials: false
+          submodules: recursive
+
+      # https://github.com/actions/create-github-app-token
+      - name: Generate GitHub App installation token
+        uses: actions/create-github-app-token@a8d616148505b5069dccd32f177bb87d7f39123b # v2.1.1
+        id: app_token
+        with:
+          app-id: ${{ vars.RENOVATE_APP_ID || '290907' }}
+          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY || secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
+      - name: Enable dry-run
+        run: echo "RENOVATE_DRY_RUN=full" >>"${GITHUB_ENV}"
+        if: inputs.dry_run || github.event_name == 'pull_request'
+
+      - uses: actions/cache/restore@v4
+        id: cache
+        with:
+          key: ${{ env.cache_key }}
+          restore-keys: |
+            ${{ env.restore_key }}
+          path: |
+            ${{ env.cache_dir }}
+
+      # Unfortunately, the permissions expected within renovate's docker container
+      # are different than the ones given after the cache is restored. We have to
+      # change ownership to solve this. We also need to have correct permissions in
+      # the entire /tmp/renovate tree, not just the section with the repo cache.
+      # See https://github.com/marketplace/actions/renovate-bot-github-action#persisting-the-repository-cache
+      - name: Fix cache permissions
+        env:
+          CACHE_DIR: ${{ env.cache_dir }}
+        run: |
+          mkdir -p "${CACHE_DIR}"
+          sudo chown -R 12021:0 /tmp/renovate/
+
+      # https://github.com/renovatebot
+      - uses: renovatebot/github-action@a447f09147d00e00ae2a82ad5ef51ca89352da80 # v43.0.9
+        with:
+          # https://docs.renovatebot.com/configuration-options
+          # https://docs.renovatebot.com/self-hosted-configuration
+          configurationFile: renovate-config.json
+          token: ${{ steps.app_token.outputs.token }}
+          renovate-version: ${{ env.RENOVATE_VERSION }}
+        env:
+          RENOVATE_DRY_RUN: ${{ env.RENOVATE_DRY_RUN }}
+          GIT_CONFIG_COUNT: 1
+          GIT_CONFIG_KEY_0: "url.https://x-access-token:${{ steps.app_token.outputs.token }}@github.com/.insteadOf"
+          GIT_CONFIG_VALUE_0: "https://github.com/"
+          RENOVATE_HOST_RULES: |
+            [
+              {
+                "hostType": "docker",
+                "username": "${{ secrets.DOCKERHUB_USER }}",
+                "password": "${{ secrets.DOCKERHUB_TOKEN }}"
+              },
+              {
+                "hostType": "docker",
+                "matchHost": "ghcr.io",
+                "username": "${{ github.actor }}",
+                "password": "${{ secrets.GITHUB_TOKEN }}"
+              }
+            ]
+
+      - uses: actions/cache/save@v4
+        if: steps.cache.outputs.cache-hit != true && github.event_name != 'pull_request_target' && env.RENOVATE_DRY_RUN != 'full'
+        with:
+          key: ${{ env.cache_key }}
+          path: |
+            ${{ env.cache_dir }}
