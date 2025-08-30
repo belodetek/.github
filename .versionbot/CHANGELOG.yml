@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Allow default regex match strings"
+      hash: ac82a8c3e208563b206251527c4fd0b7265c69df
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.9
+  title: ""
+  date: 2025-08-30T04:07:36.983Z
+- commits:
     - subject: "patch: Update aws-actions/configure-aws-credentials digest to c5a43c3"
       hash: 18d6f6638a7fdd2e7ad6ecd0bc1e59d54f6343be
       body: Update aws-actions/configure-aws-credentials
