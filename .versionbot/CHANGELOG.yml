@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update aws-actions/configure-aws-credentials digest to c5a43c3"
+      hash: 18d6f6638a7fdd2e7ad6ecd0bc1e59d54f6343be
+      body: Update aws-actions/configure-aws-credentials
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.8
+  title: ""
+  date: 2025-08-30T03:59:28.824Z
+- commits:
     - subject: "patch: Add GH datasources"
       hash: d04f56efdc8ba7a5643d37f7ed24301dfc962835
       body: ""
