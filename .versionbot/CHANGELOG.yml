@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update renovate Docker tag to v41.91.1"
+      hash: fc7d69867125abcb73586d113e54be80d7f735d4
+      body: Update renovate from 41.91.0 to 41.91.1
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.16
+  title: ""
+  date: 2025-08-30T22:14:00.509Z
+- commits:
     - subject: "patch: Link to hostapp assets"
       hash: 117114e302439b3d6519b0098ed0a1a155a5ca52
       body: ""
