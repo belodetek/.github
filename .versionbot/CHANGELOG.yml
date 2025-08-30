@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Enable regex manager"
+      hash: f713dfc1fb4e0161246da1ff89bbd934449d1fbf
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.6
+  title: ""
+  date: 2025-08-30T03:49:09.811Z
+- commits:
     - subject: "patch: Update tibdex/github-app-token action to v2"
       hash: 915a83769231d67a0be4dd6cd9f946eea9f8329e
       body: Update tibdex/github-app-token from 1 to 2
