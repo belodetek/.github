@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Rename workflow"
+      hash: d22ab842e435cf08ae786c64b72a609b5a685c97
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.13
+  title: ""
+  date: 2025-08-30T04:32:13.456Z
+- commits:
     - subject: "patch: Trigger workflow on PRs (Renovate)"
       hash: da9603c3d97a9a2b25e121fd31e499f4208ed06e
       body: ""
