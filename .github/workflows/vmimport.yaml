@@ -3,7 +3,12 @@
 # https://github.com/balena-os/balena-yocto-scripts/blob/master/automation/entry_scripts/balena-generate-ami.sh
 name: aws-ami-from-balena-os-image
 
-on: workflow_dispatch
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
