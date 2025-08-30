@@ -41,14 +41,14 @@ jobs:
           balena_app_name: belodetek/cloud-config-amd64  #  balena_os/cloud-config-amd64
           balena_app_commit: 1678f684c300862750ba9dbef1532b49
           # renovate: datasource=github-releases depName=balena-os/balena-generic
-          balena_os_version: v6.5.53+rev4
+          BALENA_OS_VERSION: v6.5.53+rev4
           development_mode: true
           ec2_instance_type: c7a.medium
         - target: generic-aarch64
           balena_app_name: belodetek/cloud-config-aarch64  #  .. cloud-config-aarch64
           balena_app_commit: 53dd5b9be8feaad89c132473c5ae04e2
           # renovate: datasource=github-releases depName=balena-os/balena-generic
-          balena_os_version: v6.5.53+rev4
+          BALENA_OS_VERSION: v6.5.53+rev4
           development_mode: true
           ec2_instance_type: m8g.medium
 
@@ -74,7 +74,7 @@ jobs:
         else
             exit 1
         fi
-        echo "name=balena-os-${{ matrix.balena_os_version }}-${{ matrix.target }}" \
+        echo "name=balena-os-${{ matrix.BALENA_OS_VERSION }}-${{ matrix.target }}" \
           | sed 's/+/-/g' >>"${GITHUB_OUTPUT}"
 
     - name: Check if the AWS/EC2 AMI already exists for this version of balenaOS
@@ -107,27 +107,27 @@ jobs:
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
       with:
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ matrix.balena_os_version }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ matrix.BALENA_OS_VERSION }}
         path: balena.img
 
     - name: download balena.img
       id: download
       if: steps.cache.outputs.cache-hit != 'true' && steps.check.outputs.skip != 'true'
       run: |
-        balena os download ${{ matrix.target }} -o balena.img --version ${{ matrix.balena_os_version }}
+        balena os download ${{ matrix.target }} -o balena.img --version ${{ matrix.BALENA_OS_VERSION }}
 
     - uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
       if: always() && steps.download.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ matrix.balena_os_version }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ matrix.BALENA_OS_VERSION }}
 
     - uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
       id: preloaded
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
       with:
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ matrix.balena_os_version }}-${{ matrix.balena_app_commit }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ matrix.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
         path: balena.img
 
     - name: Pre-load cloud-config app to handle cloud provider metadata interfaces
@@ -142,7 +142,7 @@ jobs:
       if: always() && steps.preload.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ matrix.balena_os_version }}-${{ matrix.balena_app_commit }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ matrix.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
 
     - name: Copy balenaOS image to AWS/S3 for import
       id: s3
@@ -277,7 +277,7 @@ jobs:
         echo "config_json=${config_json}" >>"${GITHUB_OUTPUT}"
         >&2 balena config generate \
           --network ethernet \
-          --version '${{ matrix.balena_os_version }}' \
+          --version '${{ matrix.BALENA_OS_VERSION }}' \
           --device "${uuid}" \
           --appUpdatePollInterval 5 \
           --output "${config_json}" \
