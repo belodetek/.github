@@ -74,7 +74,11 @@
   },
   "packageRules": [
     {
-      "matchManagers": ["github-actions", "git-submodules"],
+      "matchManagers": [
+        "github-actions",
+        "git-submodules",
+        "regex"
+      ],
       "enabled": true,
       "automerge": true
     },
