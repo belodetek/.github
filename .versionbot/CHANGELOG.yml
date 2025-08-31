@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Delete profile directory"
+      hash: f6f22c9c242d7f5f2c846eb4d3f90b7fead62a51
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.22
+  title: ""
+  date: 2025-08-31T22:22:15.745Z
+- commits:
     - subject: "patch: Update preload app"
       hash: 2ec5b5e4889d9125781ef9f37e9ca76d4724782c
       body: ""
