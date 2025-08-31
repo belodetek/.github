@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update preload app"
+      hash: 2ec5b5e4889d9125781ef9f37e9ca76d4724782c
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.21
+  title: ""
+  date: 2025-08-31T22:00:27.837Z
+- commits:
     - subject: "patch: Update google-workspace.yml"
       hash: 25bcb99623ae8edf73396abf5c0d319aa4f2f81f
       body: ""
