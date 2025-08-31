@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Delete .github/workflows/test.yml"
+      hash: 07ff5fc4cc18dd295642e037c12de73e1e7a5957
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.18
+  title: ""
+  date: 2025-08-31T15:27:40.757Z
+- commits:
     - subject: "patch: Delete .github/workflows/secret-agent-bot.yml"
       hash: d4632662cc6a144acfd224ce383e87b3274d866e
       body: ""
