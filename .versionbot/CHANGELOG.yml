@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update google-workspace.yml (security)"
+      hash: fcf609a8d60c055dd3ca57633e97138bdf9903b4
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.19
+  title: ""
+  date: 2025-08-31T15:34:41.101Z
+- commits:
     - subject: "patch: Delete .github/workflows/test.yml"
       hash: 07ff5fc4cc18dd295642e037c12de73e1e7a5957
       body: ""
