@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Delete .github/workflows/secret-agent-bot.yml"
+      hash: d4632662cc6a144acfd224ce383e87b3274d866e
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.17
+  title: ""
+  date: 2025-08-31T15:23:56.416Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v41.91.1"
       hash: fc7d69867125abcb73586d113e54be80d7f735d4
       body: Update renovate from 41.91.0 to 41.91.1
