@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update google-workspace.yml"
+      hash: 25bcb99623ae8edf73396abf5c0d319aa4f2f81f
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.20
+  title: ""
+  date: 2025-08-31T15:39:32.225Z
+- commits:
     - subject: "patch: Update google-workspace.yml (security)"
       hash: fcf609a8d60c055dd3ca57633e97138bdf9903b4
       body: ""
