@@ -45,17 +45,19 @@ jobs:
         - target: generic-amd64
           # renovate: datasource=github-releases depName=balena-os/balena-generic
           BALENA_OS_VERSION: v6.5.53
-          balena_app_name: belodetek/cloud-config-amd64  #  balena_os/cloud-config-amd64
-          balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AMD64 || 'c6c2ca646fe68c954e0cded6f173f85f' }}
+          balena_app_name: ${{ vars.BALENA_APP_NAME_AMD64 || 'bh.cr/balena_os/cloud-config-amd64' }}
+          balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AMD64 || '461031537d2655560b9bc29ea2e1405c' }}
           development_mode: true
           ec2_instance_type: c7a.medium
+          aws_ec2_metadata_v2: optional  # IMDSv1
         - target: generic-aarch64
           # renovate: datasource=github-releases depName=balena-os/balena-generic
           BALENA_OS_VERSION: v6.5.53
-          balena_app_name: belodetek/cloud-config-aarch64  #  .. cloud-config-aarch64
-          balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AARCH64 || '6ff6369634e6fac5def60f1f0723a459' }}
+          balena_app_name: ${{ vars.BALENA_APP_NAME_AARCH64 || 'bh.cr/balena_os/cloud-config-aarch64' }}
+          balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AARCH64 || 'cfe1502b178daf06475c939e16473b9c' }}
           development_mode: true
           ec2_instance_type: m8g.medium
+          aws_ec2_metadata_v2: required  # IMDSv2
 
     steps:
     # https://github.com/unfor19/install-aws-cli-action
@@ -135,13 +137,39 @@ jobs:
         key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ matrix.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
         path: balena.img
 
+    - name: Create temporary fleet to preload the public app
+      id: preload-fleet
+      if: steps.preloaded.outputs.cache-hit != 'true' && steps.check.outputs.skip != 'true'
+      run: |
+        user="$(balena whoami | grep USERNAME | awk '{print $2}')"
+        tmpfleet="tmpload-$(( RANDOM ))"
+        balena fleet create "${tmpfleet}" --type ${{ matrix.target }} --organization "${user}"
+
+        docker pull ${{ matrix.balena_app_name }}/${{ matrix.balena_app_commit }}
+
+        tmpush=$(mktemp -d)
+        pushd "${tmpush}"
+
+        cat <<EOF> Dockerfile
+        FROM ${{ matrix.balena_app_name }}/${{ matrix.balena_app_commit }}
+        EOF
+
+        balena push "${tmpfleet}"
+
+        popd
+        rm -rf "${tmpush}"
+
+        echo "name=${user}/${tmpfleet}" >>"${GITHUB_OUTPUT}"
+
     - name: Pre-load cloud-config app to handle cloud provider metadata interfaces
       id: preload
       if: steps.preloaded.outputs.cache-hit != 'true' && steps.check.outputs.skip != 'true'
+      env:
+        PRELOAD_FLEET: ${{ steps.preload-fleet.outputs.name }}
       run: |
         balena preload --debug --pin-device-to-release balena.img \
-          --fleet ${{ matrix.balena_app_name }} \
-          --commit ${{ matrix.balena_app_commit }}
+          --fleet "${PRELOAD_FLEET}" \
+          --commit current
 
     - uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
       if: always() && steps.preload.outcome == 'success' && steps.check.outputs.skip != 'true'
@@ -256,7 +284,7 @@ jobs:
         semver_major=$(echo "${version_string}" | cut -d'.' -f1)
         semver_minor=$(echo "${version_string}" | cut -d'.' -f2)
         semver_patch=$(echo "${version_string}" | cut -d'.' -f3)
-        revision="$(echo "${semver_build}" | sed 's/rev//g')"
+        revision="${semver_build/rev//}"
         revision="${revision:-0}"
 
         response="$(curl -sf "https://api.balena-cloud.com/v7/application?\$select=is_for__device_type&\$expand=application_tag(\$select=tag_key,value),is_for__device_type(\$select=slug),owns__release(\$select=id,known_issue_list,raw_version,variant,phase;\$expand=release_tag(\$select=tag_key,value),belongs_to__application(\$select=id);\$filter=(semver_major%20eq%20${semver_major})%20and%20(semver_minor%20eq%20${semver_minor})%20and%20(semver_patch%20eq%20${semver_patch})%20and%20(semver_prerelease%20eq%20%27%27)%20and%20(semver_build%20eq%20%27${semver_build}%27)%20and%20(revision%20eq%20${revision})%20and%20(variant%20in%20(%27%27,%20%27prod%27)))&\$filter=(is_host%20eq%20true)%20and%20(is_for__device_type/any(dt:dt/slug%20in%20(%27${device_type}%27)))" \
@@ -281,25 +309,74 @@ jobs:
 
         echo "id=${image_id}" >>"${GITHUB_OUTPUT}"
 
+    - name: generate SSH private key
+      if: steps.check.outputs.skip != 'true'
+      id: generate-key-pair
+      env:
+        AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+      run: |
+        key_name="${{ matrix.target }}-${GITHUB_RUN_ID}-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+        echo "key_name=${key_name}" >>"${GITHUB_OUTPUT}"
+
+        set +x
+        private_key_material="$(aws ec2 create-key-pair \
+          --key-name "${key_name}" | jq -r .KeyMaterial)"
+
+        public_key="$(aws ec2 describe-key-pairs --include-public-key \
+          --key-name "${key_name}" | jq -re .KeyPairs[].PublicKey)"
+
+        # https://stackoverflow.com/a/70384422/1559300
+        # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#masking-a-value-in-log
+        while read -r line; do
+            echo "::add-mask::${line}"
+        done <<< "${private_key_material}"
+
+        ssh_private_key="$(cat << EOF
+        ${private_key_material}
+        EOF
+        )"
+        # shellcheck disable=SC2129
+        echo "ssh_private_key<<EOF" >>"${GITHUB_OUTPUT}"
+
+        { echo "${ssh_private_key}"; echo "EOF"; } >>"${GITHUB_OUTPUT}"
+
+        echo "ssh_public_key=${public_key}" >> "${GITHUB_OUTPUT}"
+
+    # https://github.com/webfactory/ssh-agent
+    - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+      if: steps.check.outputs.skip != 'true'
+      with:
+        ssh-private-key: ${{ steps.generate-key-pair.outputs.ssh_private_key }}
+
     - name: Crete balenaCloud fleet to test the image
       id: test-fleet
       if: steps.check.outputs.skip != 'true'
       env:
         BALENA_TEST_ORG: ${{ env.BALENA_TEST_ORG }}
+        SSH_PRIVATE_KEY: ${{ steps.generate-key-pair.outputs.ssh_private_key }}
+        SSH_PUBLIC_KEY: ${{ steps.generate-key-pair.outputs.ssh_public_key }}
       run: |
         ami_test_fleet=$(openssl rand -hex 4)
         >&2 balena fleet create "${ami_test_fleet}" \
           --organization "${BALENA_TEST_ORG}" \
           --type '${{ matrix.target }}'
- 
-        key_file="${HOME}/.ssh/id_ed25519"  
-        mkdir -p "$(dirname "${_key_file}")"
-        ssh-keygen -t ed25519 -N "" -q -f "${key_file}"
-        # shellcheck disable=SC2046
-        >&2 eval $(ssh-agent)
-        >&2 ssh-add
-        balena ssh-key add "${ami_test_fleet}" "${key_file}.pub"
-   
+
+        echo "${SSH_PRIVATE_KEY}" >"${HOME}/.ssh/id_rsa"
+        echo "${SSH_PUBLIC_KEY}" >"${HOME}/.ssh/id_rsa.pub"
+        for key in $(balena ssh-key list | grep -v ID | awk '{print $1}'); do
+            fp=$(balena ssh-key "${key}" | tail -n 1 | ssh-keygen -E md5 -lf /dev/stdin | awk '{print $2}')
+            if [[ $fp =~ $(ssh-keygen -E md5 -lf "${HOME}/.ssh/id_rsa" | awk '{print $2}') ]]; then
+                match="${key}"
+                break
+            fi
+        done
+
+        if [[ -z ${match:-} ]]; then
+            balena ssh-key add "${ami_test_fleet}" "${HOME}/.ssh/id_rsa.pub"
+        else
+            balena ssh-key "${match}"
+        fi
+
         uuid="$(balena device register "${BALENA_TEST_ORG}/${ami_test_fleet}" | awk '{print $4}')"
         echo "uuid=${uuid}" >>"${GITHUB_OUTPUT}"
  
@@ -327,6 +404,12 @@ jobs:
                 exit 1
             fi
         fi
+
+        tmpconf="$(mktemp)"
+        cat <"${config_json}" | jq -re --arg pub_key "${SSH_PUBLIC_KEY}" '.os.sshKeys += [$pub_key]' >"${tmpconf}"
+        cat <"${tmpconf}" | jq -re >"${config_json}"
+        rm -f "${tmpconf}"
+
         echo "name=${BALENA_TEST_ORG}/${ami_test_fleet}" >>"${GITHUB_OUTPUT}"
   
     - name: Test AWS/EC2 AMI image
@@ -334,6 +417,8 @@ jobs:
       if: steps.check.outputs.skip != 'true'
       env:
         AMI_NAME: ${{ steps.ami.outputs.name }}
+        AWS_EC2_KEY_NAME: ${{ steps.generate-key-pair.outputs.key_name }}
+        AWS_EC2_METADATA_V2: ${{ matrix.aws_ec2_metadata_v2 }}
         AWS_SECURITY_GROUP_ID: ${{ env.AWS_SECURITY_GROUP_ID }}
         AWS_SUBNET_IDS: ${{ env.AWS_SUBNET_IDS }}
         CONFIG_JSON: ${{ steps.test-fleet.outputs.config_json }}
@@ -349,7 +434,7 @@ jobs:
             exit 1
         fi
         echo "ami_image_id=${_ami_image_id}" >>"${GITHUB_OUTPUT}"
-   
+
         for subnet_id in ${AWS_SUBNET_IDS}; do
             _instance_id=$(aws ec2 run-instances --image-id "${_ami_image_id}" --count 1 \
               --instance-type '${{ matrix.ec2_instance_type }}' \
@@ -358,6 +443,8 @@ jobs:
               "ResourceType=volume,Tags=[{Key=Name,Value=test-${AMI_NAME}}]" \
               --subnet-id "${subnet_id}" \
               --security-group-ids "${AWS_SECURITY_GROUP_ID}" \
+              --key-name "${AWS_EC2_KEY_NAME}" \
+              --metadata-options "HttpEndpoint=enabled,HttpTokens=${AWS_EC2_METADATA_V2}" \
               --user-data "file://${CONFIG_JSON}" | jq -r '.Instances[0].InstanceId' || true)
 
             [ -n "$_instance_id" ] && break
@@ -370,7 +457,10 @@ jobs:
         
         aws ec2 wait instance-running --instance-ids "${_instance_id}"
         aws ec2 wait instance-status-ok --instance-ids "${_instance_id}"
-        
+
+        ssh-add -l
+
+        # FIXME: switch to ssh-uuid
         until echo 'balena ps -q -f name=balena_supervisor | xargs balena inspect \
           | jq -r ".[] | select(.State.Health.Status!=null).Name + \":\" + .State.Health.Status"; exit' \
           | balena device ssh "${UUID}" | grep -q ":healthy"; do
@@ -497,7 +587,7 @@ jobs:
 
     - name: Clean up image on failure
       continue-on-error: true
-      if: failure()
+      if: failure() || cancelled()
       env:
         AMI_IMAGE_ID: ${{ steps.image.outputs.id }}
       run: |
@@ -507,7 +597,7 @@ jobs:
 
     - name: Clean up snapshot on failure
       continue-on-error: true
-      if: failure()
+      if: failure() || cancelled()
       env:
         AMI_SNAPSHOT_ID: ${{ steps.snapshot.outputs.id }}
       run: |
@@ -535,15 +625,48 @@ jobs:
 
         aws s3 rm "${S3_URL}"
 
-    - name: Clean up test fleet
+    - name: remove AWS/EC2 key-pair
+      if: always()
+      continue-on-error: true
+      env:
+        AWS_EC2_KEY_NAME: ${{ steps.generate-key-pair.outputs.key_name }}
+      run: |
+        [ -z "$AWS_EC2_KEY_NAME" ] && exit 0
+
+        aws ec2 delete-key-pair --key-name "${AWS_EC2_KEY_NAME}"
+
+    - name: Clean up test fleets
       continue-on-error: true
       if: always()
       env:
-        FLEET: ${{ steps.test-fleet.outputs.name }}
+        FLEETS: '${{ steps.preload-fleet.outputs.name }} ${{ steps.test-fleet.outputs.name }}'
       run: |
-        [ -z "$FLEET" ] && exit 0
+        for fleet in ${FLEETS}; do 
+            _key_id=$(balena ssh-key list | grep "${fleet#*/}" | awk '{print $1}' || echo)
+            if [ -n "$_key_id" ]; then
+                balena ssh-key rm "${_key_id}" --yes
+            fi
 
-        _key_id=$(balena ssh-key list | grep "${FLEET#*/}" | awk '{print $1}')
-        balena ssh-key rm "${_key_id}" --yes
+            balena fleet rm "${fleet}" --yes
+        done
 
-        balena fleet rm "${FLEET}" --yes
+    - uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493
+      with:
+        persist-credentials: false
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: Decimate the cache
+      continue-on-error: true
+      if: always()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        items="$(gh cache list --sort last_accessed_at --json id --jq '.[].id' | wc -l)"
+
+        if [[ "$items" -ge 10 ]]; then
+            gh cache list --sort last_accessed_at --json id --jq '.[].id' \
+              | tail -n $(( items - (items / 10) )) \
+              | xargs -I{} gh cache delete {}
+        else
+            gh cache list
+        fi
