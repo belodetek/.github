@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Preload app commits via GH vars"
+      hash: c18730d580b28c27b546dc59446fd00cdecaaa94
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.24
+  title: ""
+  date: 2025-09-01T00:25:04.463Z
+- commits:
     - subject: "patch: Update preload app"
       hash: 66d572cb19e2d1385e920c2af8ba87ef1578ba93
       body: ""
