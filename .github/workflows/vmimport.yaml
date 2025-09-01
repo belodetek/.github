@@ -46,14 +46,14 @@ jobs:
           # renovate: datasource=github-releases depName=balena-os/balena-generic
           BALENA_OS_VERSION: v6.5.53
           balena_app_name: belodetek/cloud-config-amd64  #  balena_os/cloud-config-amd64
-          balena_app_commit: 911bcb32d13861807ad80c6a9b7593e6
+          balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AMD64 || 'c6c2ca646fe68c954e0cded6f173f85f' }}
           development_mode: true
           ec2_instance_type: c7a.medium
         - target: generic-aarch64
           # renovate: datasource=github-releases depName=balena-os/balena-generic
           BALENA_OS_VERSION: v6.5.53
           balena_app_name: belodetek/cloud-config-aarch64  #  .. cloud-config-aarch64
-          balena_app_commit: bc7721dc1e07bcc626db73cb03cea3ac
+          balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AARCH64 || '6ff6369634e6fac5def60f1f0723a459' }}
           development_mode: true
           ec2_instance_type: m8g.medium
 
