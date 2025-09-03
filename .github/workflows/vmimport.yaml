@@ -45,7 +45,7 @@ jobs:
         - target: generic-amd64
           # renovate: datasource=github-releases depName=balena-os/balena-generic
           BALENA_OS_VERSION: v6.5.53
-          balena_app_name: balena_os/cloud-config-amd64
+          balena_app_name: ${{ vars.BALENA_APP_NAME_AMD64 || 'balena_os/cloud-config-amd64' }}
           balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AMD64 || '461031537d2655560b9bc29ea2e1405c' }}
           development_mode: true
           ec2_instance_type: c7a.medium
@@ -53,7 +53,7 @@ jobs:
         - target: generic-aarch64
           # renovate: datasource=github-releases depName=balena-os/balena-generic
           BALENA_OS_VERSION: v6.5.53
-          balena_app_name: balena_os/cloud-config-aarch64
+          balena_app_name: ${{ vars.BALENA_APP_NAME_AARCH64 || 'balena_os/cloud-config-aarch64' }}
           balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AARCH64 || 'cfe1502b178daf06475c939e16473b9c' }}
           development_mode: true
           ec2_instance_type: m8g.medium
