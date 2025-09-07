@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Add sshKeys to config"
+      hash: 870a61507fef15739f325eaa4e07468655100b5f
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.29
+  title: ""
+  date: 2025-09-07T21:31:16.361Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v41.97.9"
       hash: 49d78bd1f87e57fef296ed07551cda0759eb0f9f
       body: Update renovate from 41.91.4 to 41.97.9
