@@ -61,7 +61,7 @@ jobs:
     # https://github.com/unfor19/install-aws-cli-action
     - uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # v1
 
-    - uses: aws-actions/configure-aws-credentials@c5a43c32e1873343614c533eb83ffabbe5bc53bc
+    - uses: aws-actions/configure-aws-credentials@8e2d02296bcf12c081e192c60f3cb80d77f4f76a
       with:
         aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
         role-session-name: github-${{ github.job }}-${{ github.run_id }}-${{ github.run_attempt }}
