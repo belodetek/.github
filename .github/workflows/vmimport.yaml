@@ -98,7 +98,7 @@ jobs:
         fi
 
     # https://github.com/balena-io-examples/setup-balena-action
-    - uses: balena-io-examples/setup-balena-action@d3ab8f4a2c2878a2ec4725ea0f7f28aec09b7cc9 # v0.0.31
+    - uses: balena-io-examples/setup-balena-action@1ae814126400933b06280a9d72220dbdfe047e87 # v0.0.37
       if: steps.check.outputs.skip != 'true'
       env:
         # renovate: datasource=github-releases depName=balena-io/balena-cli
