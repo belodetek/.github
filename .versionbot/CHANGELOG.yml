@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update aws-actions/configure-aws-credentials digest to 8e2d022"
+      hash: 0cfdfe486a35f679cd3bf713031d5b4fc0ba9c33
+      body: Update aws-actions/configure-aws-credentials
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.25
+  title: ""
+  date: 2025-09-07T00:47:08.571Z
+- commits:
     - subject: "patch: Preload app commits via GH vars"
       hash: c18730d580b28c27b546dc59446fd00cdecaaa94
       body: ""
