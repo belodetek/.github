@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update aws-actions/configure-aws-credentials digest to 351d894"
+      hash: 306c713d92501c7b8bd18c336da548906a2c0932
+      body: Update aws-actions/configure-aws-credentials
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.30
+  title: ""
+  date: 2025-09-14T00:46:01.218Z
+- commits:
     - subject: "patch: Add sshKeys to config"
       hash: 870a61507fef15739f325eaa4e07468655100b5f
       body: ""
