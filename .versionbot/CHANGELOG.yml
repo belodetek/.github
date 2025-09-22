@@ -1,4 +1,20 @@
 - commits:
+    - subject: "patch: Update dependency balena-os/balena-generic to v6.6.4"
+      hash: f1788f3ec2a3bccc617aeb0a4039032acec21433
+      body: Update balena-os/balena-generic from 6.5.53 to 6.6.4
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update actions/create-github-app-token action to v2.1.4"
+      hash: 39e0c37586380715d8a068c4b33d1cc3c8b25ceb
+      body: Update actions/create-github-app-token from 2.1.1 to 2.1.4
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.32
+  title: ""
+  date: 2025-09-22T19:29:49.638Z
+- commits:
     - subject: "patch: Update aws-actions/configure-aws-credentials digest to 6e562ac"
       hash: a83714a8badf4e3e5635aafe1d8f9271a9559309
       body: Update aws-actions/configure-aws-credentials
