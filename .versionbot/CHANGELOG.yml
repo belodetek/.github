@@ -1,4 +1,26 @@
 - commits:
+    - subject: "patch: Update renovatebot/github-action action to v43.0.13"
+      hash: 81c0a19279322e44dbc39ad0627717887a4c1736
+      body: Update renovatebot/github-action from 43.0.10 to 43.0.13
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update dependency balena-io/balena-cli to v22.4.8"
+      hash: e0d7e217dd6069e951d375d0a195b895f0180c0d
+      body: Update balena-io/balena-cli from 22.4.1 to 22.4.8
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update balena-io-examples/setup-balena-action action to v0.0.44"
+      hash: 12c0163702c029ee29e0e8e0e126135ad86beede
+      body: Update balena-io-examples/setup-balena-action from 0.0.37 to 0.0.44
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.33
+  title: ""
+  date: 2025-09-22T21:11:40.110Z
+- commits:
     - subject: "patch: Update dependency balena-os/balena-generic to v6.6.4"
       hash: f1788f3ec2a3bccc617aeb0a4039032acec21433
       body: Update balena-os/balena-generic from 6.5.53 to 6.6.4
