@@ -109,7 +109,7 @@ jobs:
         cli-version: ${{ env.BALENA_CLI_VERSION }}
         balena-token: ${{ secrets.BALENA_API_KEY }}
 
-    - uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
+    - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       id: cache
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
@@ -123,13 +123,13 @@ jobs:
       run: |
         balena os download ${{ matrix.target }} -o balena.img --version ${{ matrix.BALENA_OS_VERSION }}
 
-    - uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
+    - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       if: always() && steps.download.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
         key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ matrix.BALENA_OS_VERSION }}
 
-    - uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
+    - uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       id: preloaded
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
@@ -171,7 +171,7 @@ jobs:
           --fleet "${PRELOAD_FLEET}" \
           --commit current
 
-    - uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4
+    - uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       if: always() && steps.preload.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
