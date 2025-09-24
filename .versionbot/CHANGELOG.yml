@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update renovate Docker tag to v41.128.1"
+      hash: 8c18ba6a46b0bb739bcbcb56bae66132e2427c93
+      body: Update renovate from 41.125.0 to 41.128.1
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.37
+  title: ""
+  date: 2025-09-24T16:50:22.208Z
+- commits:
     - subject: "patch: Update balena-io-examples/setup-balena-action action to v0.0.45"
       hash: c413b99a33099c6c9993122adb303f50326ed7a4
       body: Update balena-io-examples/setup-balena-action from 0.0.44 to 0.0.45
