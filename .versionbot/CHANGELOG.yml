@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'Revert "Merge pull request #44 from
+        belodetek/renovate/balena-os-balena-generic-6.x"'
+      hash: a37912b2526edc6b005c20fe9a87ea0d1acd3271
+      body: |
+        This reverts commit 851d7496dad5b757ce288a134df71b68339712fb, reversing
+        changes made to a0f0e3912dd87e674deb0ea069af0bd1edb4deca.
+      footer:
+        change-type: patch
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.35
+  title: ""
+  date: 2025-09-24T16:41:27.899Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v41.125.0"
       hash: 29767f5e67b2357511b2332372bd6d7985cb6ca5
       body: Update renovate from 41.97.9 to 41.125.0
