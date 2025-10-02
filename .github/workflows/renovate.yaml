@@ -22,7 +22,7 @@ permissions:
 env:
   LOG_LEVEL: debug
   # renovate: datasource=docker depName=renovate packageName=ghcr.io/renovatebot/renovate
-  RENOVATE_VERSION: 41.128.1
+  RENOVATE_VERSION: 41.132.5
 
 # https://docs.github.com/en/actions/using-jobs/using-concurrency
 # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs
