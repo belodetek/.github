@@ -44,7 +44,7 @@ jobs:
         include:
         - target: generic-amd64
           # renovate: datasource=github-releases depName=balena-os/balena-generic
-          BALENA_OS_VERSION: v6.6.10
+          BALENA_OS_VERSION: v6.6.13
           balena_app_name: ${{ vars.BALENA_APP_NAME_AMD64 || 'bh.cr/balena_os/cloud-config-amd64' }}
           balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AMD64 || '461031537d2655560b9bc29ea2e1405c' }}
           development_mode: true
@@ -52,7 +52,7 @@ jobs:
           aws_ec2_metadata_v2: optional  # IMDSv1
         - target: generic-aarch64
           # renovate: datasource=github-releases depName=balena-os/balena-generic
-          BALENA_OS_VERSION: v6.6.10
+          BALENA_OS_VERSION: v6.6.13
           balena_app_name: ${{ vars.BALENA_APP_NAME_AARCH64 || 'bh.cr/balena_os/cloud-config-aarch64' }}
           balena_app_commit: ${{ vars.BALENA_APP_COMMIT_AARCH64 || 'cfe1502b178daf06475c939e16473b9c' }}
           development_mode: true
