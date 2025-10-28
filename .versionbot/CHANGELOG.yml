@@ -1,4 +1,20 @@
 - commits:
+    - subject: "patch: Update dependency balena-io/balena-cli to v22.4.15"
+      hash: 0a296c36b0fcdadf0525ace44474927f1ea897d9
+      body: Update balena-io/balena-cli from 22.4.9 to 22.4.15
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update balena-io-examples/setup-balena-action action to v0.0.52"
+      hash: 274317807a871138b1da032d0a7a9f7e913dfa4c
+      body: Update balena-io-examples/setup-balena-action from 0.0.46 to 0.0.52
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.47
+  title: ""
+  date: 2025-10-28T19:27:00.977Z
+- commits:
     - subject: "patch: Update aws-actions/configure-aws-credentials digest to 0d00a56"
       hash: da3ebb002c816423c1deec9c65b33c2d6ecf6ce5
       body: Update aws-actions/configure-aws-credentials
