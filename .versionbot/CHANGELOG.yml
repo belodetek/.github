@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Correct public/private AMI shuffle"
+      hash: 59a45cc602b231c2c3fc63433258d4f7620ebb5a
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.51
+  title: ""
+  date: 2025-10-28T20:27:32.932Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v41.164.0"
       hash: 87cf53ec747d0ce4d90c0266593589c523b00e1f
       body: Update renovate from 41.163.7 to 41.164.0
