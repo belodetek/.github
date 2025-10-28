@@ -486,7 +486,7 @@ jobs:
           "Name=architecture,Values=${AMI_ARCHITECTURE}" \
           "Name=is-public,Values=true" | jq '.Images | length')
         
-        if [ "$_ami_public_images_count" -ge "$AWS_AMI_PUBLIC_ARCH_QUOTA"  ]; then
+        if [ "$_ami_public_images_count" -ge "$AWS_AMI_PUBLIC_QUOTA"  ]; then
             _ami_oldest_image_id=$(aws ec2 describe-images \
               --owners "self" \
               --filters "Name=name,Values=${AMI_NAME%%-*}" \
