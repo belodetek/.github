@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update renovate Docker tag to v41.165.2"
+      hash: 0d7a6b4dbdcb6c23b465c8c7ed864817d00e3cd6
+      body: Update renovate from 41.164.1 to 41.165.2
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.53
+  title: ""
+  date: 2025-10-29T15:57:46.874Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v41.164.1"
       hash: e60b8922b49f14c81adcbbdf1a51c274a79a8a91
       body: Update renovate from 41.164.0 to 41.164.1
