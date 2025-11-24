@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Remove broken GH caches cleanup step"
+      hash: a185203c66d1ba8185d0462deb40f5833dc8086e
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.66
+  title: ""
+  date: 2025-11-24T22:12:29.878Z
+- commits:
     - subject: "patch: Update dependency balena-io/balena-cli to v23"
       hash: 23db3c35486108a08e63f10894761d4759c57db3
       body: Update balena-io/balena-cli from 22.5.5 to 23.2.0
