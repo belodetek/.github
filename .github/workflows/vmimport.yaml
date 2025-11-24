@@ -654,19 +654,3 @@ jobs:
       with:
         persist-credentials: false
         ref: ${{ github.event.pull_request.head.sha }}
-
-    - name: Decimate the cache
-      continue-on-error: true
-      if: always()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        items="$(gh cache list --sort last_accessed_at --json id --jq '.[].id' | wc -l)"
-
-        if [[ "$items" -ge 10 ]]; then
-            gh cache list --sort last_accessed_at --json id --jq '.[].id' \
-              | tail -n $(( items - (items / 10) )) \
-              | xargs -I{} gh cache delete {}
-        else
-            gh cache list
-        fi
