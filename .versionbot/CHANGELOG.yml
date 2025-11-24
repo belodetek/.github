@@ -1,4 +1,38 @@
 - commits:
+    - subject: "patch: Update dependency balena-io/balena-cli to v22.5.5"
+      hash: f42acb455b34cf5031a02ff5f13912c1d90ce283
+      body: Update balena-io/balena-cli from 22.4.16 to 22.5.5
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update actions/create-github-app-token action to v2.2.0"
+      hash: ff3cf95ffaf24d288c8947caf7fcfef813e09a26
+      body: Update actions/create-github-app-token from 2.1.4 to 2.2.0
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update balena-io-examples/setup-balena-action action to v0.0.61"
+      hash: ca30c194793852e9b1643f7376ab9965dea62fc3
+      body: Update balena-io-examples/setup-balena-action from 0.0.53 to 0.0.61
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update aws-actions/configure-aws-credentials digest to 61815dc"
+      hash: cafb9484799822b11a77bbc323dba9893dd4bcdb
+      body: Update aws-actions/configure-aws-credentials
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update actions/checkout digest to c2d88d3"
+      hash: 9a0a37887941e09a42642eaedd670357d118fad5
+      body: Update actions/checkout
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.62
+  title: ""
+  date: 2025-11-24T21:15:34.757Z
+- commits:
     - subject: "patch: Update actions/checkout digest"
       hash: 72d44e34676e3e8fb7e5954c0c5500bdda029dcd
       body: Update actions/checkout
