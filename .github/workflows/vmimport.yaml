@@ -482,14 +482,14 @@ jobs:
 
         _ami_public_images_count=$(aws ec2 describe-images \
           --owners "self" \
-          --filters "Name=name,Values=${AMI_NAME%%-*}" \
+          --filters "Name=name,Values=${AMI_NAME%%-*}-*" \
           "Name=architecture,Values=${AMI_ARCHITECTURE}" \
           "Name=is-public,Values=true" | jq '.Images | length')
         
         if [ "$_ami_public_images_count" -ge "$AWS_AMI_PUBLIC_QUOTA"  ]; then
             _ami_oldest_image_id=$(aws ec2 describe-images \
               --owners "self" \
-              --filters "Name=name,Values=${AMI_NAME%%-*}" \
+              --filters "Name=name,Values=${AMI_NAME%%-*}-*" \
               "Name=architecture,Values=${AMI_ARCHITECTURE}" \
               "Name=is-public,Values=true" \
               --query 'sort_by(Images, &CreationDate)[0].ImageId')
@@ -654,19 +654,3 @@ jobs:
       with:
         persist-credentials: false
         ref: ${{ github.event.pull_request.head.sha }}
-
-    - name: Decimate the cache
-      continue-on-error: true
-      if: always()
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        items="$(gh cache list --sort last_accessed_at --json id --jq '.[].id' | wc -l)"
-
-        if [[ "$items" -ge 10 ]]; then
-            gh cache list --sort last_accessed_at --json id --jq '.[].id' \
-              | tail -n $(( items - (items / 10) )) \
-              | xargs -I{} gh cache delete {}
-        else
-            gh cache list
-        fi
