@@ -205,7 +205,7 @@ jobs:
           --description "snapshot-${AMI_NAME}" \
           --disk-container "Description=balena-os,Format=RAW,UserBucket={S3Bucket=${VMIMPORT_S3_BUCKET},S3Key=preloaded-images/${S3_KEY}}" \
           | jq -r .ImportTaskId)
-        
+
         while true; do
             response="$(aws ec2 describe-import-snapshot-tasks --import-task-ids "${import_task_id}")"
             status_message="$(echo "${response}" | jq -r ".ImportSnapshotTasks[].SnapshotTaskDetail.StatusMessage")"
@@ -216,14 +216,14 @@ jobs:
             if [[ "$status" =~ "completed" ]]; then
                 break
             fi
-          
+
             if [[ "$status" =~ "deleting" ]]; then
                 echo "::error::${status_message}"
                 exit 1
             fi
             sleep $(( (RANDOM % 30) + 30))s
         done
-  
+
         snapshot_id=$(aws ec2 describe-import-snapshot-tasks --import-task-ids "${import_task_id}" \
           | jq -r '.ImportSnapshotTasks[].SnapshotTaskDetail.SnapshotId')
         echo "id=${snapshot_id}" >>"${GITHUB_OUTPUT}"
@@ -247,11 +247,11 @@ jobs:
         existing_image_id=$(aws ec2 describe-images --output text \
             --filters "Name=name,Values=${AMI_NAME}" \
             --query 'Images[*].[ImageId]')
-  
-        if [ -n "$existing_image_id" ]; then    
+
+        if [ -n "$existing_image_id" ]; then
             exit 1
         fi
-  
+
         # only supported on x86_64
         if [ "${AMI_ARCHITECTURE}" = "x86_64" ]; then
             tpm_opts="--tpm-support v2.0"
@@ -263,7 +263,7 @@ jobs:
             VolumeSize=${AMI_EBS_VOLUME_SIZE},
             VolumeType=${AMI_EBS_VOLUME_TYPE}
         }"
-  
+
         # shellcheck disable=SC2086
         image_id=$(aws ec2 register-image \
           --name "${AMI_NAME}" \
@@ -379,13 +379,13 @@ jobs:
 
         uuid="$(balena device register "${BALENA_TEST_ORG}/${ami_test_fleet}" | awk '{print $4}')"
         echo "uuid=${uuid}" >>"${GITHUB_OUTPUT}"
- 
-        if [ '${{ matrix.development_mode }}' = true ]; then 
+
+        if [ '${{ matrix.development_mode }}' = true ]; then
             _dev_mode="--dev";
         else
             _dev_mode="";
         fi
- 
+
         config_json=$(mktemp)
         echo "config_json=${config_json}" >>"${GITHUB_OUTPUT}"
         >&2 balena config generate \
@@ -395,7 +395,7 @@ jobs:
           --appUpdatePollInterval 5 \
           --output "${config_json}" \
           ${_dev_mode}
- 
+
         if [ ! -f "${config_json}" ]; then
             exit 1
         else
@@ -411,7 +411,7 @@ jobs:
         rm -f "${tmpconf}"
 
         echo "name=${BALENA_TEST_ORG}/${ami_test_fleet}" >>"${GITHUB_OUTPUT}"
-  
+
     - name: Test AWS/EC2 AMI image
       id: test
       if: steps.check.outputs.skip != 'true'
@@ -429,7 +429,7 @@ jobs:
         _ami_image_id=$(aws ec2 describe-images --output text \
           --filters "Name=name,Values=${AMI_NAME}" \
           --query 'Images[*].[ImageId]')
-   
+
         if [ -z "$_ami_image_id" ]; then
             exit 1
         fi
@@ -449,12 +449,12 @@ jobs:
 
             [ -n "$_instance_id" ] && break
         done
-   
+
         if [ -z "${_instance_id}" ]; then
             exit 1
         fi
         echo "instance_id=${_instance_id}" >>"${GITHUB_OUTPUT}"
-        
+
         aws ec2 wait instance-running --instance-ids "${_instance_id}"
         aws ec2 wait instance-status-ok --instance-ids "${_instance_id}"
 
@@ -477,7 +477,7 @@ jobs:
         AMI_NAME: ${{ steps.ami.outputs.name }}
         # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ami-quotas.html
         AWS_AMI_PUBLIC_QUOTA: 2
-      run: |   
+      run: |
         [ -z "$AMI_NAME" ] && exit 0
 
         _ami_public_images_count=$(aws ec2 describe-images \
@@ -485,15 +485,15 @@ jobs:
           --filters "Name=name,Values=${AMI_NAME%%-*}-*" \
           "Name=architecture,Values=${AMI_ARCHITECTURE}" \
           "Name=is-public,Values=true" | jq '.Images | length')
-        
+
         if [ "$_ami_public_images_count" -ge "$AWS_AMI_PUBLIC_QUOTA"  ]; then
-            _ami_oldest_image_id=$(aws ec2 describe-images \
+            _ami_oldest_image_id=$(aws ec2 describe-images --output text \
               --owners "self" \
               --filters "Name=name,Values=${AMI_NAME%%-*}-*" \
               "Name=architecture,Values=${AMI_ARCHITECTURE}" \
               "Name=is-public,Values=true" \
               --query 'sort_by(Images, &CreationDate)[0].ImageId')
-        
+
             if [ -n "$_ami_oldest_image_id" ]; then
                 if [ "$(aws ec2 describe-images --image-ids "${_ami_oldest_image_id}" \
                   | jq -r '.Images[].Public')" = "true" ]; then
@@ -508,11 +508,11 @@ jobs:
                 fi
             fi
         fi
-        
+
         _ami_snapshot_id=$(aws ec2 describe-images \
           --region="${AWS_DEFAULT_REGION}" \
           --image-ids "${AMI_IMAGE_ID}" | jq -r '.Images[].BlockDeviceMappings[].Ebs.SnapshotId')
- 
+
         if [ -n "$_ami_snapshot_id" ]; then
             if aws ec2 modify-snapshot-attribute --operation-type add \
               --region "${AWS_DEFAULT_REGION}" \
@@ -529,7 +529,7 @@ jobs:
         else
             exit 1
         fi
-        
+
         if aws ec2 modify-image-attribute --image-id "${AMI_IMAGE_ID}" --launch-permission "Add=[{Group=all}]"; then
             if ! [ "$(aws ec2 describe-images --image-ids "${AMI_IMAGE_ID}" | jq -r '.Images[].Public')" = "true" ]; then
                 exit 1
@@ -641,7 +641,7 @@ jobs:
       env:
         FLEETS: '${{ steps.preload-fleet.outputs.name }} ${{ steps.test-fleet.outputs.name }}'
       run: |
-        for fleet in ${FLEETS}; do 
+        for fleet in ${FLEETS}; do
             _key_id=$(balena ssh-key list | grep "${fleet#*/}" | awk '{print $1}' || echo)
             if [ -n "$_key_id" ]; then
                 balena ssh-key rm "${_key_id}" --yes
