@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update dependency balena-os/balena-generic to v6.8.7"
+      hash: afa8a0f06f11261f1c6ada9a0ee62b6505328335
+      body: Update balena-os/balena-generic from 6.8.0 to 6.8.7
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.70
+  title: ""
+  date: 2025-12-08T16:48:27.617Z
+- commits:
     - subject: "patch: Update aws-actions/configure-aws-credentials digest to 8b8c83f"
       hash: 3574e6e3f0db2fdd6e56e91c5ba34dada3ba187a
       body: Update aws-actions/configure-aws-credentials
