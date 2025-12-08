@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Fix query formatting in vmimport.yaml"
+      hash: 890bb9481f037ab73b5ca6200fe34d2a4d2c07f8
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.71
+  title: ""
+  date: 2025-12-08T17:14:12.522Z
+- commits:
     - subject: "patch: Update dependency balena-os/balena-generic to v6.8.7"
       hash: afa8a0f06f11261f1c6ada9a0ee62b6505328335
       body: Update balena-os/balena-generic from 6.8.0 to 6.8.7
