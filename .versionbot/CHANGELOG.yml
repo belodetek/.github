@@ -1,4 +1,32 @@
 - commits:
+    - subject: "patch: Update renovatebot/github-action action to v44.0.5"
+      hash: bc9f8c642a6ae4984300904d58fe1c97153c3581
+      body: Update renovatebot/github-action from 44.0.4 to 44.0.5
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update dependency balena-io/balena-cli to v23.2.7"
+      hash: 51a58c151750cd22be324fb748862930db1a3253
+      body: Update balena-io/balena-cli from 23.2.0 to 23.2.7
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update balena-io-examples/setup-balena-action action to v0.0.67"
+      hash: cc74e1de99d4e0f9888dfa4c3f9e4acc90c2f7b9
+      body: Update balena-io-examples/setup-balena-action from 0.0.61 to 0.0.67
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update actions/create-github-app-token action to v2.2.1"
+      hash: c7dfe561960b8a8212f358126470e3e70de64ee4
+      body: Update actions/create-github-app-token from 2.2.0 to 2.2.1
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.72
+  title: ""
+  date: 2025-12-08T17:28:19.730Z
+- commits:
     - subject: "patch: Fix query formatting in vmimport.yaml"
       hash: 890bb9481f037ab73b5ca6200fe34d2a4d2c07f8
       body: ""
