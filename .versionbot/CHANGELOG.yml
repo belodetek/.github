@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update aws-actions/configure-aws-credentials digest to 8b8c83f"
+      hash: 3574e6e3f0db2fdd6e56e91c5ba34dada3ba187a
+      body: Update aws-actions/configure-aws-credentials
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.69
+  title: ""
+  date: 2025-12-08T16:35:05.223Z
+- commits:
     - subject: "patch: Update actions/checkout digest to 8e8c483"
       hash: 4e0b50434b9a46e107b139b6a28437987090cabf
       body: Update actions/checkout
