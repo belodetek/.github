@@ -1,2 +1,2 @@
 # .github
-> special repository with org. config(s)
+> special repository with this organisation's config(s)
