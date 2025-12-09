@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update dependency balena-os/balena-generic to v6.9.2"
+      hash: 57d83b96b9700d3f08883f4d7954887623677715
+      body: Update balena-os/balena-generic from 6.8.7 to 6.9.2
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.76
+  title: ""
+  date: 2025-12-09T17:49:07.006Z
+- commits:
     - subject: "patch: Update dependency balena-io/balena-cli to v23.2.8"
       hash: 7c9cc4ad1d875b45d6fcbd0776697626fa97b07e
       body: Update balena-io/balena-cli from 23.2.7 to 23.2.8
