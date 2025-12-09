@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update README to clarify organization config"
+      hash: 1cbbdd6f2312d767c21cc7788b052749d4fe51bd
+      body: ""
+      footer: {}
+      author: Anton Belodedenko
+      nested: []
+  version: 0.1.77
+  title: ""
+  date: 2025-12-09T18:48:05.679Z
+- commits:
     - subject: "patch: Update dependency balena-os/balena-generic to v6.9.2"
       hash: 57d83b96b9700d3f08883f4d7954887623677715
       body: Update balena-os/balena-generic from 6.8.7 to 6.9.2
