@@ -1,2 +1,2 @@
 # .github
-> special repository with orignisation config(s)
+> special repository with org. config(s)
