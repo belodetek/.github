@@ -1,4 +1,26 @@
 - commits:
+    - subject: "patch: Update actions/cache action to v5"
+      hash: ef004b82cf617a8f46acdad7f28f15c552ee3fe5
+      body: Update actions/cache from 4 to 5
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update renovatebot/github-action action to v44.1.0"
+      hash: b71fb3bfe47f2d97618478058c69d9dba222ca4b
+      body: Update renovatebot/github-action from 44.0.5 to 44.1.0
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update renovate Docker tag to v42.42.5"
+      hash: 5b5810a4fc8c18ecb487df3a651f9ab895bee159
+      body: Update renovate from 42.42.0 to 42.42.5
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.81
+  title: ""
+  date: 2025-12-12T16:32:37.114Z
+- commits:
     - subject: "patch: Update aws/aws-cf-templates digest to 3f8bf9d"
       hash: c8df09a9774bd232c8888182df9f3da8f8a8d38f
       body: Update aws/aws-cf-templates
