@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update aws/aws-cf-templates digest to 3f8bf9d"
+      hash: c8df09a9774bd232c8888182df9f3da8f8a8d38f
+      body: Update aws/aws-cf-templates
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.80
+  title: ""
+  date: 2025-12-12T16:19:09.626Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v42.42.0"
       hash: 9038477174767b04a14ea59d20e633bb9b857373
       body: Update renovate from 42.39.6 to 42.42.0
