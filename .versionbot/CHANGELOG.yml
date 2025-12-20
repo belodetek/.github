@@ -1,4 +1,26 @@
 - commits:
+    - subject: "patch: Update dependency balena-io/balena-cli to v23.2.11"
+      hash: 333e469547eb99c5d5761528faff537aa6e7d0c3
+      body: Update balena-io/balena-cli from 23.2.8 to 23.2.11
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update balena-io-examples/setup-balena-action action to v0.0.72"
+      hash: 1389b9a5bb995be8d6d98b67928b9ad07fd1adc2
+      body: Update balena-io-examples/setup-balena-action from 0.0.69 to 0.0.72
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update actions/cache digest to 9255dc7"
+      hash: 086ab261c290683e2b67b0513bd08b67e082952b
+      body: Update actions/cache
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.83
+  title: ""
+  date: 2025-12-20T16:13:53.694Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v42.50.3"
       hash: d7aed23679b57db68fe8133653247affced4a67d
       body: Update renovate from 42.42.5 to 42.50.3
