@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update aws-actions/configure-aws-credentials digest to b547701"
+      hash: da80e5f766cfc6ce9bada178be35a096f7560cbc
+      body: Update aws-actions/configure-aws-credentials
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.85
+  title: ""
+  date: 2025-12-20T16:22:09.279Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v42.64.1"
       hash: 12382809d8556862557257050f48d19def664c48
       body: Update renovate from 42.50.3 to 42.64.1
