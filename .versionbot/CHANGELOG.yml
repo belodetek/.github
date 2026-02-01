@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update dependency balena-os/balena-generic to v6.10.22"
+      hash: c653d5ff2e35bf2bd1937403b80faaaf286d0cd6
+      body: Update balena-os/balena-generic from 6.9.2 to 6.10.22
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.86
+  title: ""
+  date: 2026-02-01T01:26:13.663Z
+- commits:
     - subject: "patch: Update aws-actions/configure-aws-credentials digest to b547701"
       hash: da80e5f766cfc6ce9bada178be35a096f7560cbc
       body: Update aws-actions/configure-aws-credentials
