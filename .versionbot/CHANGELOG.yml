@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update actions/checkout digest"
+      hash: 5bebbb05195b76f8c5befcabdbb11a83c39c4000
+      body: Update actions/checkout
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.89
+  title: ""
+  date: 2026-02-22T01:03:05.767Z
+- commits:
     - subject: "patch: Update actions/cache digest to cdf6c1f"
       hash: 0a33eeafdeb4ea52d34225cf74df4976a0151aa3
       body: Update actions/cache
