@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update aws-actions/configure-aws-credentials digest to dc64d28"
+      hash: c25a6f07bc2a11f6f72f57e15f7487dbe41ff5d1
+      body: Update aws-actions/configure-aws-credentials
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.95
+  title: ""
+  date: 2026-04-05T01:13:24.888Z
+- commits:
     - subject: "patch: Update aws-actions/configure-aws-credentials digest to 84e4970"
       hash: 810af83ac99903eb897dc1dd323998f8961072b5
       body: Update aws-actions/configure-aws-credentials
