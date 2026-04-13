@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update renovate Docker tag to v43"
+      hash: 4f6c2c759a84e1d8ce461db203b0dc265a342715
+      body: Update renovate from 42.64.1 to 43.113.0
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.100
+  title: ""
+  date: 2026-04-13T18:24:43.992Z
+- commits:
     - subject: "patch: Update dependency balena-io/balena-cli to v24"
       hash: 50a5014467142a9f06c301c1be46e37800ce6bc9
       body: Update balena-io/balena-cli from 23.2.11 to 24.1.3
