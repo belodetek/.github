@@ -539,6 +539,7 @@ jobs:
     - name: Set image deprecation
       if: steps.test.outcome == 'success' && steps.check.outputs.skip != 'true'
       env:
+        AMI_NAME: ${{ steps.ami.outputs.name }}
         AMI_IMAGE_ID: ${{ steps.test.outputs.ami_image_id }}
         PERIOD: "now +1 year"
       run: |
