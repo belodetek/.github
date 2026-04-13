@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update dependency balena-os/balena-generic to v6.12.3"
+      hash: 5f5a33c74b6ff1ab7aef48560d1556b616191e22
+      body: Update balena-os/balena-generic from 6.10.22 to 6.12.3
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.103
+  title: ""
+  date: 2026-04-13T19:01:40.513Z
+- commits:
     - subject: "patch: Update renovatebot/github-action action to v46"
       hash: 51fffd1c7ef126247d68e36b71cdd499eab76308
       body: Update renovatebot/github-action from 45.0.3 to 46.1.9
