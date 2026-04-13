@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Pin product-os/flowzone action to 3b69c8f"
+      hash: ae0a2eec33544e716364caacee3cb876d41f366d
+      body: Update product-os/flowzone
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.104
+  title: ""
+  date: 2026-04-13T19:05:37.791Z
+- commits:
     - subject: "patch: Update dependency balena-os/balena-generic to v6.12.3"
       hash: 5f5a33c74b6ff1ab7aef48560d1556b616191e22
       body: Update balena-os/balena-generic from 6.10.22 to 6.12.3
