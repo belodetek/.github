@@ -95,7 +95,7 @@ jobs:
           sudo chown -R 12021:0 /tmp/renovate/
 
       # https://github.com/renovatebot
-      - uses: renovatebot/github-action@98c8f1b0835e163b9fdfc7c86dff40dadc7162ee # v45.0.3
+      - uses: renovatebot/github-action@eb932558ad942cccfd8211cf535f17ff183a9f74 # v46.1.9
         with:
           # https://docs.renovatebot.com/configuration-options
           # https://docs.renovatebot.com/self-hosted-configuration
