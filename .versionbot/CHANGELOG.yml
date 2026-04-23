@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update webfactory/ssh-agent action to v0.10.0"
+      hash: d8a47479090600b78327d9f5c347c2954598642f
+      body: Update webfactory/ssh-agent from 0.9.1 to 0.10.0
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.108
+  title: ""
+  date: 2026-04-23T18:27:39.216Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v43.139.8"
       hash: 602d2bedc903d528f30a6f775785e2785724e820
       body: Update renovate from 43.113.0 to 43.139.8
