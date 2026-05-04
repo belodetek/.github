@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update dependency balena-io/balena-cli to v25"
+      hash: 596f213e3c8a9c8550b90d4ee1c2886db01800ea
+      body: Update balena-io/balena-cli from 24.1.4 to 25.1.0
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.117
+  title: ""
+  date: 2026-05-04T15:42:19.716Z
+- commits:
     - subject: "patch: Update renovatebot/github-action action to v46.1.13"
       hash: f3a9e22dc108c6e36b8e2854115660aaa3a492c4
       body: Update renovatebot/github-action from 46.1.11 to 46.1.13
