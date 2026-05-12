@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Check balenaOS version existence before proceeding"
+      hash: 68324ac7623452fa0fa7b6bb41c4fdfd1b90f133
+      body: Add a step to check if the specified balenaOS version exists.
+      footer: {}
+      author: Anton B.
+      nested: []
+  version: 0.1.129
+  title: ""
+  date: 2026-05-12T18:03:21.126Z
+- commits:
     - subject: "patch: Pin belodetek/.github action to f4487a7"
       hash: 28b9079ed47708786526b65798d6e84b4f1b1723
       body: Update belodetek/.github
