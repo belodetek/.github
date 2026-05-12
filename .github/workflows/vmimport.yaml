@@ -295,7 +295,7 @@ jobs:
         semver_major=$(echo "${version_string}" | cut -d'.' -f1)
         semver_minor=$(echo "${version_string}" | cut -d'.' -f2)
         semver_patch=$(echo "${version_string}" | cut -d'.' -f3)
-        revision="${semver_build/rev//}"
+        revision="${semver_build/rev/}"
         revision="${revision:-0}"
 
         response="$(curl -sf "https://api.balena-cloud.com/v7/application?\$select=is_for__device_type&\$expand=application_tag(\$select=tag_key,value),is_for__device_type(\$select=slug),owns__release(\$select=id,known_issue_list,raw_version,variant,phase;\$expand=release_tag(\$select=tag_key,value),belongs_to__application(\$select=id);\$filter=(semver_major%20eq%20${semver_major})%20and%20(semver_minor%20eq%20${semver_minor})%20and%20(semver_patch%20eq%20${semver_patch})%20and%20(semver_prerelease%20eq%20%27%27)%20and%20(semver_build%20eq%20%27${semver_build}%27)%20and%20(revision%20eq%20${revision})%20and%20(variant%20in%20(%27%27,%20%27prod%27)))&\$filter=(is_host%20eq%20true)%20and%20(is_for__device_type/any(dt:dt/slug%20in%20(%27${device_type}%27)))" \
