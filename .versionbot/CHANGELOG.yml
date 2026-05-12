@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Call from another workflow"
+      hash: 8a8324596d8207f69476e76860a303a5f36a52e2
+      body: ""
+      footer: {}
+      author: Anton B.
+      nested: []
+  version: 0.1.127
+  title: ""
+  date: 2026-05-12T17:35:36.649Z
+- commits:
     - subject: "patch: Update renovatebot/github-action action to v46.1.14"
       hash: 82ba4525f6ec328c6df7e7832e32a0e63bcd7f16
       body: Update renovatebot/github-action from 46.1.13 to 46.1.14
