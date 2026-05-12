@@ -8,7 +8,8 @@ on:
     branches:
       - master
       - main
-  workflow_call:
+   workflow_dispatch:
+   workflow_call:
     inputs:
       balena_os_version:
         required: false
