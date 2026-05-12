@@ -282,7 +282,7 @@ jobs:
         [ -z "${image_id}" ] && exit 1
 
         device_type='${{ matrix.target }}'
-        balena_balena_balena_os_version="$(printf '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | jq -sRr '@uri')"
+        balena_os_version="$(printf '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | jq -sRr '@uri')"
         changelog_link="$(echo '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | sed 's/\.//g' | sed 's/+//g')"
         version_string="$(echo '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | cut -d'+' -f1)"
         semver_build="$(echo '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | awk -F'+' '{print $2}')"
@@ -298,15 +298,15 @@ jobs:
         hostapp_id="$(echo "${response}" | jq -re .d[].owns__release[].belongs_to__application[].id)"
         release_id="$(echo "${response}" | jq -re .d[].owns__release[].id)"
         hostapp_release_url="https://dashboard.balena-cloud.com/apps/${hostapp_id}/releases/${release_id}/summary"
-        changelog_url="https://github.com/balena-os/balena-generic/blob/${balena_balena_balena_os_version}/CHANGELOG.md#${changelog_link}"
+        changelog_url="https://github.com/balena-os/balena-generic/blob/${balena_os_version}/CHANGELOG.md#${changelog_link}"
 
         aws ec2 create-tags --resources "${image_id}" \
           --tags Key=Name,Value="${AMI_NAME}" \
           Key=publisher,Value="belodetek" \
           Key=email,Value="team@belodetek.io" \
           Key=github,Value="https://github.com/belodetek" \
-          Key=github-release,Value="https://github.com/balena-os/balena-generic/releases/tag/${balena_balena_balena_os_version}" \
-          Key=github-tag,Value="https://github.com/balena-os/balena-generic/tree/${balena_balena_balena_os_version}" \
+          Key=github-release,Value="https://github.com/balena-os/balena-generic/releases/tag/${balena_os_version}" \
+          Key=github-tag,Value="https://github.com/balena-os/balena-generic/tree/${balena_os_version}" \
           Key=meta-changelog,Value='https://github.com/balena-os/meta-balena/blob/master/CHANGELOG.md' \
           Key=changelog,Value="${changelog_url}" \
           Key=hostapp-release,Value="${hostapp_release_url}" \
