@@ -1,4 +1,20 @@
 - commits:
+    - subject: "patch: Fix revision extraction in vmimport.yaml"
+      hash: 3f8b2cb736f9a21ab695f82200e4107375c5bcc3
+      body: ""
+      footer: {}
+      author: Anton B.
+      nested: []
+    - subject: "patch: Update belodetek/.github digest to 61cb7bc"
+      hash: 93a00d7d8ebd5ed17a5ad087581aad8e4d3a35cc
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.134
+  title: ""
+  date: 2026-05-12T18:39:40.533Z
+- commits:
     - subject: "patch: Use custom versioning for balena-generic"
       hash: 92817c8ca776c865a45077cb16baca3fca53577d
       body: ""
