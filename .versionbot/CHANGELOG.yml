@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Include revisions"
+      hash: 329a1f13e564b3f0fdbdddb5ec2d23326dca6733
+      body: ""
+      footer: {}
+      author: Anton B.
+      nested: []
+  version: 0.1.122
+  title: ""
+  date: 2026-05-12T16:58:09.296Z
+- commits:
     - subject: "patch: Update product-os/flowzone digest to 3385aec"
       hash: 4cc737c487f80a5d6ab7d4d0c4143ad21fb5f82d
       body: Update product-os/flowzone
