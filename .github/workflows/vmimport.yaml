@@ -9,6 +9,11 @@ on:
       - master
       - main
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      balena_os_version:
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -81,7 +86,7 @@ jobs:
         else
             exit 1
         fi
-        echo "name=balena-os-${{ matrix.BALENA_OS_VERSION }}-${{ matrix.target }}" \
+        echo "name=balena-os-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}-${{ matrix.target }}" \
           | sed 's/+/-/g' >>"${GITHUB_OUTPUT}"
 
     - name: Check if the AWS/EC2 AMI already exists for this version of balenaOS
@@ -114,27 +119,27 @@ jobs:
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
       with:
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ matrix.BALENA_OS_VERSION }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
         path: balena.img
 
     - name: download balena.img
       id: download
       if: steps.cache.outputs.cache-hit != 'true' && steps.check.outputs.skip != 'true'
       run: |
-        balena os download ${{ matrix.target }} -o balena.img --version ${{ matrix.BALENA_OS_VERSION }}
+        balena os download ${{ matrix.target }} -o balena.img --version ${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
     - uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
       if: always() && steps.download.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ matrix.BALENA_OS_VERSION }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
     - uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
       id: preloaded
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
       with:
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ matrix.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
         path: balena.img
 
     - name: Create temporary fleet to preload the public app
@@ -175,7 +180,7 @@ jobs:
       if: always() && steps.preload.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ matrix.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
 
     - name: Copy balenaOS image to AWS/S3 for import
       id: s3
@@ -277,10 +282,10 @@ jobs:
         [ -z "${image_id}" ] && exit 1
 
         device_type='${{ matrix.target }}'
-        balena_os_version="$(printf '${{ matrix.BALENA_OS_VERSION }}' | jq -sRr '@uri')"
-        changelog_link="$(echo '${{ matrix.BALENA_OS_VERSION }}' | sed 's/\.//g' | sed 's/+//g')"
-        version_string="$(echo '${{ matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | cut -d'+' -f1)"
-        semver_build="$(echo '${{ matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | awk -F'+' '{print $2}')"
+        balena_balena_balena_os_version="$(printf '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | jq -sRr '@uri')"
+        changelog_link="$(echo '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | sed 's/\.//g' | sed 's/+//g')"
+        version_string="$(echo '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | cut -d'+' -f1)"
+        semver_build="$(echo '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | awk -F'+' '{print $2}')"
         semver_major=$(echo "${version_string}" | cut -d'.' -f1)
         semver_minor=$(echo "${version_string}" | cut -d'.' -f2)
         semver_patch=$(echo "${version_string}" | cut -d'.' -f3)
@@ -293,15 +298,15 @@ jobs:
         hostapp_id="$(echo "${response}" | jq -re .d[].owns__release[].belongs_to__application[].id)"
         release_id="$(echo "${response}" | jq -re .d[].owns__release[].id)"
         hostapp_release_url="https://dashboard.balena-cloud.com/apps/${hostapp_id}/releases/${release_id}/summary"
-        changelog_url="https://github.com/balena-os/balena-generic/blob/${balena_os_version}/CHANGELOG.md#${changelog_link}"
+        changelog_url="https://github.com/balena-os/balena-generic/blob/${balena_balena_balena_os_version}/CHANGELOG.md#${changelog_link}"
 
         aws ec2 create-tags --resources "${image_id}" \
           --tags Key=Name,Value="${AMI_NAME}" \
           Key=publisher,Value="belodetek" \
           Key=email,Value="team@belodetek.io" \
           Key=github,Value="https://github.com/belodetek" \
-          Key=github-release,Value="https://github.com/balena-os/balena-generic/releases/tag/${balena_os_version}" \
-          Key=github-tag,Value="https://github.com/balena-os/balena-generic/tree/${balena_os_version}" \
+          Key=github-release,Value="https://github.com/balena-os/balena-generic/releases/tag/${balena_balena_balena_os_version}" \
+          Key=github-tag,Value="https://github.com/balena-os/balena-generic/tree/${balena_balena_balena_os_version}" \
           Key=meta-changelog,Value='https://github.com/balena-os/meta-balena/blob/master/CHANGELOG.md' \
           Key=changelog,Value="${changelog_url}" \
           Key=hostapp-release,Value="${hostapp_release_url}" \
@@ -390,7 +395,7 @@ jobs:
         echo "config_json=${config_json}" >>"${GITHUB_OUTPUT}"
         >&2 balena config generate \
           --network ethernet \
-          --version '${{ matrix.BALENA_OS_VERSION }}' \
+          --version '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' \
           --device "${uuid}" \
           --appUpdatePollInterval 5 \
           --output "${config_json}" \
