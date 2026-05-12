@@ -1,0 +1,16 @@
+---
+name: Build and register (manually) balenaOS AWS/EC2 AMI
+on:
+  workflow_dispatch:
+    inputs:
+      balena_os_version:
+        required: false
+        type: string
+
+jobs:
+  dispatch-import-vm:
+    name: call-import-vm
+    uses: belodetek/.github/.github/workflows/vmimport.yaml@master
+    secrets: inherit
+    with:
+      balena_os_version: ${{ inputs.balena_os_version }}
