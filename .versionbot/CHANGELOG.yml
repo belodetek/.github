@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Pin belodetek/.github action to f4487a7"
+      hash: 28b9079ed47708786526b65798d6e84b4f1b1723
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.128
+  title: ""
+  date: 2026-05-12T17:52:24.724Z
+- commits:
     - subject: "patch: Call from another workflow"
       hash: 8a8324596d8207f69476e76860a303a5f36a52e2
       body: ""
