@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Use custom versioning for balena-generic"
+      hash: 92817c8ca776c865a45077cb16baca3fca53577d
+      body: ""
+      footer: {}
+      author: Anton B.
+      nested: []
+  version: 0.1.133
+  title: ""
+  date: 2026-05-12T18:29:19.282Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v43.176.2"
       hash: bc6c70f97333165dc702bc50c6bb1ebc6fbd3736
       body: Update renovate from 43.163.4 to 43.176.2
