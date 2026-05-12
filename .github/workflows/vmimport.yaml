@@ -114,6 +114,12 @@ jobs:
         cli-version: ${{ env.BALENA_CLI_VERSION }}
         balena-token: ${{ secrets.BALENA_API_KEY }}
 
+    # handle balena-cli silent fallback to wrong OS version if revision is specified but does not exist
+    - name: check balenaOS version exists and matches input
+      if: steps.check.outputs.skip != 'true'
+      run: |
+        balena os versions ${{ matrix.target }} | grep '^${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}$'
+
     - uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
       id: cache
       if: steps.check.outputs.skip != 'true'
