@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update actions/create-github-app-token action to v3.2.0"
+      hash: e482f674fdc5430a8e8f297820ed57a4b65f792f
+      body: Update actions/create-github-app-token from 3.1.1 to 3.2.0
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.144
+  title: ""
+  date: 2026-05-18T21:27:17.325Z
+- commits:
     - subject: "patch: Update belodetek/.github digest to b91dfe8"
       hash: 25d2e438d5af7f148ee3361285441087752eccd6
       body: Update belodetek/.github
