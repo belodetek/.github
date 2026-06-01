@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update belodetek/.github digest to 0b960d0"
+      hash: 937a94ca0dca8e71f05a9c79a56ccac5e80c7a9e
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.196
+  title: ""
+  date: 2026-06-01T18:24:17.432Z
+- commits:
     - subject: "patch: Update dependency balena-io/balena-cli to v25.1.7"
       hash: 9a8bca8801ee4ed0233dcae91165e59cdd550b8d
       body: Update balena-io/balena-cli from 25.1.6 to 25.1.7
