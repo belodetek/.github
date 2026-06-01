@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update belodetek/.github digest to 0c2db20"
+      hash: 29ac800665ef4c49973931e376f4ca4678cafcce
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.198
+  title: ""
+  date: 2026-06-01T19:16:37.725Z
+- commits:
     - subject: "patch: Update belodetek/.github digest to f2cfe86"
       hash: 261ddd06f7d35fd5be2ac00772bb7feeb44a6907
       body: Update belodetek/.github
