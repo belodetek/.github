@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update renovate Docker tag to v43.216.4"
+      hash: 65b5941130d9fd47a8cb2bd7c9350d182c6240e9
+      body: Update renovate from 43.216.1 to 43.216.4
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.207
+  title: ""
+  date: 2026-06-14T02:14:57.605Z
+- commits:
     - subject: "patch: Update product-os/flowzone digest to 7db3b32"
       hash: e3fed6c8e9f9e98480ff8be808b6a5c0616bf535
       body: Update product-os/flowzone
