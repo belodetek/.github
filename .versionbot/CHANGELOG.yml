@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update belodetek/.github digest to 62dd9a6"
+      hash: cfb930ee823e32cee6af3213a91e6fc0dbcc5141
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.208
+  title: ""
+  date: 2026-06-21T02:14:25.533Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v43.216.4"
       hash: 65b5941130d9fd47a8cb2bd7c9350d182c6240e9
       body: Update renovate from 43.216.1 to 43.216.4
