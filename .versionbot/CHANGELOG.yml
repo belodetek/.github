@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update product-os/flowzone digest to d26b0aa"
+      hash: 44158cb85d241298a5467bdb84d29c5450810c6b
+      body: Update product-os/flowzone
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.210
+  title: ""
+  date: 2026-06-22T16:17:40.609Z
+- commits:
     - subject: "patch: Update belodetek/.github digest to 8109aad"
       hash: 1f0a88398c5a96effdaf3a84151a91d832ec4cb7
       body: Update belodetek/.github
