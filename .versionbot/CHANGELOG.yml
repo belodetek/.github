@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update renovate Docker tag to v43.249.3"
+      hash: 2e53855dcf2fb782c68e6ea736adf9ce467fd3a2
+      body: Update renovate from 43.235.2 to 43.249.3
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.216
+  title: ""
+  date: 2026-06-30T20:57:10.693Z
+- commits:
     - subject: "patch: Resolve OS version from semver stub"
       hash: 6f4bc1cce5651922f8f9ed16b73488738e5bf9a4
       body: ""
