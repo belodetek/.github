@@ -65,6 +65,25 @@ jobs:
           aws_ec2_metadata_v2: required  # IMDSv2
 
     steps:
+    # https://github.com/balena-io-examples/setup-balena-action
+    - uses: balena-io-examples/setup-balena-action@fee0ed01069566dd4c71b24e64c8b9c1c26cea17 # v0.0.119
+      env:
+        # renovate: datasource=github-releases depName=balena-io/balena-cli
+        BALENA_CLI_VERSION: v25.1.7
+      with:
+        cli-version: ${{ env.BALENA_CLI_VERSION }}
+        balena-token: ${{ secrets.BALENA_API_KEY }}
+
+    # handle balena-cli silent fallback to wrong OS version if revision is specified but does not exist
+    - name: check balenaOS version exists and matches input
+      id: resolve-version
+      run: |
+        balena_os_version="$(balena os versions ${{ matrix.target }} \
+          | grep -E '^${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}(\+rev\d+)?$' \
+          | head -n 1)"
+
+        echo "balena_os_version=${balena_os_version}" >>"${GITHUB_OUTPUT}"
+
     # https://github.com/unfor19/install-aws-cli-action
     - uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # v1
 
@@ -86,8 +105,10 @@ jobs:
         else
             exit 1
         fi
-        echo "name=balena-os-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}-${{ matrix.target }}" \
+        echo "name=balena-os-${{ env.BALENA_OS_VERSION }}-${{ matrix.target }}" \
           | sed 's/+/-/g' >>"${GITHUB_OUTPUT}"
+      env:
+        BALENA_OS_VERSION: ${{ steps.resolve-version.outputs.balena_os_version || inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
     - name: Check if the AWS/EC2 AMI already exists for this version of balenaOS
       id: check
@@ -104,49 +125,41 @@ jobs:
             echo 'skip=true' >>"${GITHUB_OUTPUT}"
         fi
 
-    # https://github.com/balena-io-examples/setup-balena-action
-    - uses: balena-io-examples/setup-balena-action@fee0ed01069566dd4c71b24e64c8b9c1c26cea17 # v0.0.119
-      if: steps.check.outputs.skip != 'true'
-      env:
-        # renovate: datasource=github-releases depName=balena-io/balena-cli
-        BALENA_CLI_VERSION: v25.1.7
-      with:
-        cli-version: ${{ env.BALENA_CLI_VERSION }}
-        balena-token: ${{ secrets.BALENA_API_KEY }}
-
-    # handle balena-cli silent fallback to wrong OS version if revision is specified but does not exist
-    - name: check balenaOS version exists and matches input
-      if: steps.check.outputs.skip != 'true'
-      run: |
-        balena os versions ${{ matrix.target }} | grep '^${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}$'
-
     - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       id: cache
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
       with:
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ env.BALENA_OS_VERSION }}
         path: balena.img
+      env:
+        BALENA_OS_VERSION: ${{ steps.resolve-version.outputs.balena_os_version || inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
     - name: download balena.img
       id: download
       if: steps.cache.outputs.cache-hit != 'true' && steps.check.outputs.skip != 'true'
       run: |
-        balena os download ${{ matrix.target }} -o balena.img --version ${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
+        balena os download ${{ matrix.target }} -o balena.img --version "${BALENA_OS_VERSION}"
+      env:
+        BALENA_OS_VERSION: ${{ steps.resolve-version.outputs.balena_os_version || inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
     - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       if: always() && steps.download.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ env.BALENA_OS_VERSION }}
+      env:
+        BALENA_OS_VERSION: ${{ steps.resolve-version.outputs.balena_os_version || inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
     - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       id: preloaded
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
       with:
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ env.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
         path: balena.img
+      env:
+        BALENA_OS_VERSION: ${{ steps.resolve-version.outputs.balena_os_version || inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
     - name: Create temporary fleet to preload the public app
       id: preload-fleet
@@ -186,7 +199,9 @@ jobs:
       if: always() && steps.preload.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
-        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
+        key: ${{ runner.os }}-balena-os-${{ matrix.target }}-preload-${{ env.BALENA_OS_VERSION }}-${{ matrix.balena_app_commit }}
+      env:
+        BALENA_OS_VERSION: ${{ steps.resolve-version.outputs.balena_os_version || inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
     - name: Copy balenaOS image to AWS/S3 for import
       id: s3
@@ -252,6 +267,7 @@ jobs:
         AMI_ROOT_DEVICE_NAME: /dev/sda1
         AMI_SNAPSHOT_ID: ${{ steps.snapshot.outputs.id }}
         BALENA_API_KEY: ${{ secrets.BALENA_API_KEY }}
+        BALENA_OS_VERSION: ${{ steps.resolve-version.outputs.balena_os_version || inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
       run: |
         [ -z "$AMI_NAME" ] && exit 1
 
@@ -288,10 +304,10 @@ jobs:
         [ -z "${image_id}" ] && exit 1
 
         device_type='${{ matrix.target }}'
-        balena_os_version="$(printf '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | jq -sRr '@uri')"
-        changelog_link="$(echo '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | sed 's/\.//g' | sed 's/+//g')"
-        version_string="$(echo '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | cut -d'+' -f1)"
-        semver_build="$(echo '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' | sed 's/^v//' | awk -F'+' '{print $2}')"
+        balena_os_version="$(printf '${{ env.BALENA_OS_VERSION }}' | jq -sRr '@uri')"
+        changelog_link="$(echo '${{ env.BALENA_OS_VERSION }}' | sed 's/\.//g' | sed 's/+//g')"
+        version_string="$(echo '${{ env.BALENA_OS_VERSION }}' | sed 's/^v//' | cut -d'+' -f1)"
+        semver_build="$(echo '${{ env.BALENA_OS_VERSION }}' | sed 's/^v//' | awk -F'+' '{print $2}')"
         semver_major=$(echo "${version_string}" | cut -d'.' -f1)
         semver_minor=$(echo "${version_string}" | cut -d'.' -f2)
         semver_patch=$(echo "${version_string}" | cut -d'.' -f3)
@@ -366,6 +382,7 @@ jobs:
         BALENA_TEST_ORG: ${{ env.BALENA_TEST_ORG }}
         SSH_PRIVATE_KEY: ${{ steps.generate-key-pair.outputs.ssh_private_key }}
         SSH_PUBLIC_KEY: ${{ steps.generate-key-pair.outputs.ssh_public_key }}
+        BALENA_OS_VERSION: ${{ steps.resolve-version.outputs.balena_os_version || inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
       run: |
         ami_test_fleet=$(openssl rand -hex 4)
         >&2 balena fleet create "${ami_test_fleet}" \
@@ -401,7 +418,7 @@ jobs:
         echo "config_json=${config_json}" >>"${GITHUB_OUTPUT}"
         >&2 balena config generate \
           --network ethernet \
-          --version '${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}' \
+          --version '${{ env.BALENA_OS_VERSION }}' \
           --device "${uuid}" \
           --appUpdatePollInterval 5 \
           --output "${config_json}" \
