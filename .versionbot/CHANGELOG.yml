@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Use Perl compat. regex"
+      hash: f609a201013ad8bac55c9f8ad361133ac0b8da87
+      body: ""
+      footer: {}
+      author: Anton B.
+      nested: []
+  version: 0.1.219
+  title: ""
+  date: 2026-06-30T22:55:51.538Z
+- commits:
     - subject: "patch: Update belodetek/.github digest to ed85e94"
       hash: 9125d5cab9bb86d3d031495a788d83bc333edf2c
       body: Update belodetek/.github
