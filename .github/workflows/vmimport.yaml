@@ -86,7 +86,7 @@ jobs:
         re='^${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}(\+rev\d+)?$'
         echo "::debug::regex: ${re}"
 
-        balena_os_version="$(cat <"${tempver}" | grep -E "${re}" | head -n 1)"
+        balena_os_version="$(cat <"${tempver}" | grep -P "${re}" | head -n 1)"
         echo "balena_os_version=${balena_os_version}" >>"${GITHUB_OUTPUT}"
 
         rm -f "${tempver}"
