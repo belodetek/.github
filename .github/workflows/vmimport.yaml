@@ -120,7 +120,7 @@ jobs:
       run: |
         balena os versions ${{ matrix.target }} | grep '^${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}$'
 
-    - uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+    - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       id: cache
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
@@ -134,13 +134,13 @@ jobs:
       run: |
         balena os download ${{ matrix.target }} -o balena.img --version ${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
-    - uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+    - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       if: always() && steps.download.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
         key: ${{ runner.os }}-balena-os-${{ matrix.target }}-image-${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}
 
-    - uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+    - uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       id: preloaded
       if: steps.check.outputs.skip != 'true'
       continue-on-error: true
@@ -182,7 +182,7 @@ jobs:
           --fleet "${PRELOAD_FLEET}" \
           --commit current
 
-    - uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+    - uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
       if: always() && steps.preload.outcome == 'success' && steps.check.outputs.skip != 'true'
       with:
         path: balena.img
