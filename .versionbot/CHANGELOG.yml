@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update belodetek/.github digest to 8bf2b05"
+      hash: b027a4dd08af177aaea2d8f3b15b8ad241bb64ee
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.220
+  title: ""
+  date: 2026-06-30T23:02:21.551Z
+- commits:
     - subject: "patch: Use Perl compat. regex"
       hash: f609a201013ad8bac55c9f8ad361133ac0b8da87
       body: ""
