@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update belodetek/.github digest to 4ef2cfb"
+      hash: d06e482184034147e888210c4feaca82a3fc84dc
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.213
+  title: ""
+  date: 2026-06-30T19:59:30.578Z
+- commits:
     - subject: "patch: Update actions/checkout action to v7"
       hash: 8230eb0292d7006bdf2250b7318abc265076ffc2
       body: Update actions/checkout from 6.0.3 to 7.0.0
