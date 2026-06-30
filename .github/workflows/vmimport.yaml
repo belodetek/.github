@@ -78,11 +78,18 @@ jobs:
     - name: check balenaOS version exists and matches input
       id: resolve-version
       run: |
-        balena_os_version="$(balena os versions ${{ matrix.target }} \
-          | grep -E '^${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}(\+rev\d+)?$' \
-          | head -n 1)"
+        tempver="$(mktemp)"
 
+        balena os versions ${{ matrix.target }} >"${tempver}"
+        echo "::debug::${tempver}: $(cat <"${tempver}")"
+
+        re='^${{ inputs.balena_os_version || matrix.BALENA_OS_VERSION }}(\+rev\d+)?$'
+        echo "::debug::regex: ${re}"
+
+        balena_os_version="$(cat <"${tempver}" | grep -E "${re}" | head -n 1)"
         echo "balena_os_version=${balena_os_version}" >>"${GITHUB_OUTPUT}"
+
+        rm -f "${tempver}"
 
     # https://github.com/unfor19/install-aws-cli-action
     - uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # v1
