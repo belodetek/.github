@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update dependency balena-os/balena-generic to v7.5.8"
+      hash: ba3a443f5b81f0e91ea05f39a248cd1f356bbc06
+      body: Update balena-os/balena-generic from 7.0.5 to 7.5.8
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.227
+  title: ""
+  date: 2026-07-09T19:22:31.811Z
+- commits:
     - subject: "patch: Update renovate Docker tag to v43.256.2"
       hash: cef26aa5ab804bdbb761cc9a05b78a0a9ae227a6
       body: Update renovate from 43.249.7 to 43.256.2
