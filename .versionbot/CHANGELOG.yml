@@ -1,4 +1,20 @@
 - commits:
+    - subject: "patch: Update renovatebot/github-action action to v46.1.18"
+      hash: 310ba4318aa0f2fca7b6615aa2d02df3cb293ccd
+      body: Update renovatebot/github-action from 46.1.17 to 46.1.18
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update product-os/flowzone digest to 3d5381d"
+      hash: b976dd1fb21bc25a16b9089d46f6b8317ce4eb07
+      body: Update product-os/flowzone
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.228
+  title: ""
+  date: 2026-07-09T19:31:20.358Z
+- commits:
     - subject: "patch: Update dependency balena-os/balena-generic to v7.5.8"
       hash: ba3a443f5b81f0e91ea05f39a248cd1f356bbc06
       body: Update balena-os/balena-generic from 7.0.5 to 7.5.8
