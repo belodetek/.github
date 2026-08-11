@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update belodetek/.github digest to 93249b8"
+      hash: d5f464d909f419bee5713028a78a9453241279d9
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.249
+  title: ""
+  date: 2026-08-11T23:44:53.515Z
+- commits:
     - subject: "patch: Update balena-io-examples/setup-balena-action action to v0.1.0"
       hash: db33ca68d4065a56fbf45f0c1d5b703dcb81f639
       body: Update balena-io-examples/setup-balena-action from 0.0.119 to 0.1.0
