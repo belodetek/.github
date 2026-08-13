@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update product-os/flowzone digest to 9e0d14f"
+      hash: df01901ac3aa297fd3ec5b23430cc1e6b3fe186d
+      body: Update product-os/flowzone
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.251
+  title: ""
+  date: 2026-08-13T21:37:28.123Z
+- commits:
     - subject: "patch: Update dependency balena-os/balena-generic to v7.9.0"
       hash: 5fa06c1c7d0c3ffc1b7ff0a5fc06084e291d4f53
       body: Update balena-os/balena-generic from 7.7.0 to 7.9.0
