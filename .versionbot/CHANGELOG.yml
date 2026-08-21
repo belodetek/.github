@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update belodetek/.github digest to e02c530"
+      hash: 16baa3fa2c8ce50a05bc3bc33a6974622c4dee52
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.259
+  title: ""
+  date: 2026-08-21T17:28:43.905Z
+- commits:
     - subject: "patch: Update dependency balena-os/balena-generic to v8"
       hash: 56cc01ba1a98c4e93af78af4dd8ba74f76696dd2
       body: Update balena-os/balena-generic from 7.9.0 to 8.0.0
