@@ -1,4 +1,20 @@
 - commits:
+    - subject: "patch: Update dependency balena-io/balena-cli to v25.2.6"
+      hash: 9f2aba0d57c00f50901e5449a358376575c8a904
+      body: Update balena-io/balena-cli from 25.2.5 to 25.2.6
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update product-os/flowzone digest to 87c2e72"
+      hash: f5420b850e17073c6d8386ea9fe70523f22a901c
+      body: Update product-os/flowzone
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.266
+  title: ""
+  date: 2026-10-15T19:54:16.775Z
+- commits:
     - subject: "patch: Update belodetek/.github digest to 2a9a2f6"
       hash: cbe7b658cb2268be713388639072b7805a740ff8
       body: Update belodetek/.github
