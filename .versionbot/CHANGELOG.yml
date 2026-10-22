@@ -1,4 +1,32 @@
 - commits:
+    - subject: "patch: Update renovate Docker tag to v44.178.0"
+      hash: b2699179dc52f7c522844053b8e92cd347919fcb
+      body: Update renovate from 44.164.10 to 44.178.0
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update renovatebot/github-action action to v46.3.9"
+      hash: ad6b6ef2106d2fe80565d322c1fd684151752aba
+      body: Update renovatebot/github-action from 46.3.8 to 46.3.9
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update dependency balena-io/balena-cli to v25.2.7"
+      hash: de8907b7c75680543db3d32dcaaaad59e39df48a
+      body: Update balena-io/balena-cli from 25.2.6 to 25.2.7
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update balena-io-examples/setup-balena-action action to v0.1.4"
+      hash: 9bd85bf8512af402e21785bf55f95f589e442196
+      body: Update balena-io-examples/setup-balena-action from 0.1.0 to 0.1.4
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.272
+  title: ""
+  date: 2026-10-22T16:04:42.269Z
+- commits:
     - subject: "patch: Update product-os/flowzone digest to 9a966b1"
       hash: 6b2094867c54204f941fd69b3a13b5ec717cc6af
       body: Update product-os/flowzone
