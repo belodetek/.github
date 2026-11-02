@@ -10,7 +10,7 @@ on:
 jobs:
   dispatch-import-vm:
     name: call-import-vm
-    uses: belodetek/.github/.github/workflows/vmimport.yaml@117b913e194d7014a577b88e48573967972572e1 # master
+    uses: belodetek/.github/.github/workflows/vmimport.yaml@22511641bf18a9247125fc127c720c1372f3f556 # master
     secrets: inherit
     with:
       balena_os_version: ${{ inputs.balena_os_version }}
