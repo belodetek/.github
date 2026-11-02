@@ -1,4 +1,26 @@
 - commits:
+    - subject: "patch: Update renovatebot/github-action action to v46.3.12"
+      hash: 933a56061c3c7389c0caf35ef218e51e8c80893c
+      body: Update renovatebot/github-action from 46.3.9 to 46.3.12
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update renovate Docker tag to v44.178.5"
+      hash: a3a2d0f0238ebfc4cca0815a6ac710bf6d91a8fc
+      body: Update renovate from 44.178.0 to 44.178.5
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update belodetek/.github digest to 2251164"
+      hash: 261a98a2cc3aae8847542f2f1931c365410968fc
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.278
+  title: ""
+  date: 2026-11-02T15:41:49.518Z
+- commits:
     - subject: "patch: Update product-os/flowzone digest to 72be5ce"
       hash: eb820c5a119d8653ed0fa04bbd7f9ff4f69b4005
       body: Update product-os/flowzone
