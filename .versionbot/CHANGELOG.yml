@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update renovate Docker tag to v44.222.2"
+      hash: 53a08747b059e34f3a6c8d9e2bd2c9f4affefac2
+      body: Update renovate from 44.178.5 to 44.222.2
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.279
+  title: ""
+  date: 2026-11-08T02:56:42.331Z
+- commits:
     - subject: "patch: Update renovatebot/github-action action to v46.3.12"
       hash: 933a56061c3c7389c0caf35ef218e51e8c80893c
       body: Update renovatebot/github-action from 46.3.9 to 46.3.12
