@@ -34,7 +34,9 @@
   ],
   "requireConfig": "optional",
   "repositories": [
-    "belodetek/.github"
+    "belodetek/.github",
+    "belodetek/only-cats",
+    "belodetek/pet-a-manger"
   ],
   "printConfig": true,
   "prHourlyLimit": 1,
