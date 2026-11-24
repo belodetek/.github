@@ -66,7 +66,7 @@ jobs:
 
     steps:
     # https://github.com/balena-io-examples/setup-balena-action
-    - uses: balena-io-examples/setup-balena-action@fe122d819d9721a5605b8ad997a13025f7612019 # v0.1.34
+    - uses: balena-io-examples/setup-balena-action@97f62e1e68fe44cf0a2d3d8621b707cc100dd803 # v0.1.35
       env:
         # renovate: datasource=github-releases depName=balena-io/balena-cli
         BALENA_CLI_VERSION: v25.2.39
