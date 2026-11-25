@@ -1,4 +1,26 @@
 - commits:
+    - subject: "patch: Update balena-io-examples/setup-balena-action action to v0.1.40"
+      hash: 86d46e2383fc25e30d1f85d5853716fa21e9769e
+      body: Update balena-io-examples/setup-balena-action from 0.1.37 to 0.1.40
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update product-os/flowzone digest to ff00e72"
+      hash: 2fcbf7f4ef7a7d683584412a8a8ec5564fe8b0f3
+      body: Update product-os/flowzone
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+    - subject: "patch: Update belodetek/.github digest to 75cb188"
+      hash: 736158a2410e208174b189d4e86802c74d1f3580
+      body: Update belodetek/.github
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.305
+  title: ""
+  date: 2026-11-25T17:56:53.175Z
+- commits:
     - subject: "patch: Update dependency balena-os/balena-generic to v9.1.0"
       hash: ce0a21c379d844563f0a13f6179dfcc1d0546f1c
       body: Update balena-os/balena-generic from 9.0.3 to 9.1.0
