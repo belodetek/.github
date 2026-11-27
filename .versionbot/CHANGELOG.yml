@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Update renovatebot/github-action action to v46.3.15"
+      hash: c8e640e684992f4f4cbaf59a0b41482ba98d320e
+      body: Update renovatebot/github-action from 46.3.14 to 46.3.15
+      footer: {}
+      author: belodetek[bot]
+      nested: []
+  version: 0.1.307
+  title: ""
+  date: 2026-11-27T19:33:07.553Z
+- commits:
     - subject: "patch: Update belodetek/.github digest to f6b7ac5"
       hash: 260ad692916436b940e05daab9cee687e5e35759
       body: Update belodetek/.github
